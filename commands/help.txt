@@ -1,0 +1,8 @@
+DD="brbv" | echo $DD;
+
+DD="brbv" && echo $DD;
+
+DD=$(winpty -Xallow-non-tty node dd.js) && echo $DD
+
+
+winpty -Xallow-non-tty node dd.js

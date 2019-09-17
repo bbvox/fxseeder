@@ -1,0 +1,36 @@
+{
+  "name": "scrap",
+  "version": "0.1.0",
+  "description": "Scrap data from sites",
+  "main": "index.js",
+  "scripts": {
+    "start:mongo": "echo \"{}\" > $npm_package_config_mongo && node ./commands/mongodb.js",
+    "start": "./index.js",
+    "debug": "./index.js --debug",
+    "test": "node ./node_modules/mocha/bin/mocha  --recursive --timeout 5000 --exit",
+    "test-cover": "istanbul cover --include-all-sources test/*.test.js && istanbul check-coverage",
+    "test:cov": "node ./node_modules/mocha/bin/mocha  --recursive --require blanket --reporter html-cov > test/coverage.html",
+    "OK": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.5",
+    "mongoose": "^5.7.1",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^6.2.0",
+    "mongodb-memory-server": "^5.2.3",
+    "nock": "^11.3.4",
+    "sinon": "^7.4.2"
+  },
+  "config": {
+    "mongo": "./config/mongo.json"
+  },
+  "bin": {
+    "start_mongodb": "./commands/mongodb.js"
+  }
+}
