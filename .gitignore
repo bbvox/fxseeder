@@ -1,0 +1,7 @@
+node_modules/
+config/*.json
+
+test/coverage.html
+coverage
+*.tar.gz
+.nyc_output
