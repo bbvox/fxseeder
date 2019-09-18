@@ -1,4 +1,8 @@
-fxl.com cronJob
+# fxl.com seeder
+
+[![Build Status](https://travis-ci.org/bbvox/fxseeder.svg?branch=master)](https://travis-ci.org/bbvox/fxseeder)
+[![Coverage Status](https://coveralls.io/repos/github/bbvox/fxseeder/badge.svg?branch=master)](https://coveralls.io/github/bbvox/fxseeder?branch=master)
+
 ## Description
 Micro service to get data from config/index.json ( url ) and store it to the DB
 
