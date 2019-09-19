@@ -7,16 +7,14 @@
     "start:mongo": "echo \"{}\" > $npm_package_config_mongodb && node ./commands/mongodb.js",
     "start": "./index.js",
     "debug": "./index.js --debug",
-    "test": "mocha --recursive --timeout 5000 --exit",
-    "test:cover": "nyc --reporter=lcov ./node_modules/mocha/bin/mocha  --recursive --timeout 5000 --exit",
+    "test": "mocha --recursive --timeout $npm_package_config_timeout --exit",
+    "test:cover": "nyc --reporter=lcov ./node_modules/mocha/bin/mocha  --recursive --timeout $npm_package_config_timeout --exit",
     "test:lcov": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "test:cover-html": "nyc --reporter=html ./node_modules/mocha/bin/mocha  --recursive --timeout 5000 --exit",
-    "OK": "echo \"Error: no test specified\" && exit 1"
+    "test:cover-html": "nyc --reporter=html ./node_modules/mocha/bin/mocha  --recursive --timeout $npm_package_config_timeout --exit"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^3.5.5",
     "mongoose": "^5.7.1",
     "request": "^2.88.0"
   },
@@ -30,7 +28,8 @@
     "sinon": "^7.4.2"
   },
   "config": {
-    "mongodb": "./config/mongo.json"
+    "mongodb": "./config/mongo.json",
+    "timeout": 10000
   },
   "bin": {
     "start_mongodb": "./commands/mongodb.js"

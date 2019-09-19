@@ -31,25 +31,22 @@ const exportModel = {};
 
 exportModel.connect = (mongoDbTest = "") => {
   return new Promise((res, rej) => {
-    if (!db.client) {
-      const dbHost = mongoDbTest || mongoHost;
-      db.client = new mongoose.Mongoose();
-      db.client.connect(dbHost, {
-        useUnifiedTopology: true,
-        useNewUrlParser: true
-      }, dbErr => {
-        if (dbErr) {
-          global.debug && global.debug(dbErr, "mongoDb connection");
-          return rej(dbErr);
-        }
-
-        global.debug && global.debug(dbHost, "mongoDB host");
-        db.model = db.client.model('rrate', db.schema);
-        res();
-      });
-    } else {
-      res();
+    if (db.client) {
+      return res();
     }
+
+    const dbHost = mongoDbTest || mongoHost;
+    db.client = new mongoose.Mongoose();
+    db.client.connect(dbHost, cfg.mongo.options, dbErr => {
+      if (dbErr) {
+        global.debug && global.debug(dbErr, "mongoDb connection");
+        return rej(dbErr);
+      }
+
+      global.debug && global.debug(dbHost, "mongoDB host");
+      db.model = db.client.model('rrate', db.schema);
+      res();
+    });
   });
 }
 
@@ -133,7 +130,7 @@ exportModel.agregate = () => {
 }
 
 exportModel.ohlc = pairArray => {
-  let perPeriod = {}
+  let perPeriod = {};
   perPeriod.min = perPeriod.max = pairArray[0].value;
   perPeriod.open = pairArray[0].value
 

@@ -12,7 +12,14 @@
   },
   "mongo": {
     "host": "mongodb://127.0.0.1:27017/fxlines",
-    "pollSize": 5
+    "pollSize": 5,
+    "options": {
+      "useUnifiedTopology": true,
+      "useNewUrlParser": true,
+      "reconnectTries": 10,
+      "reconnectInterval": 200,
+      "connectTimeoutMS": 1000
+    }
   },
   "pairs": [
     "eur/usd",

@@ -8,7 +8,7 @@ const app = require("../app/");
 const model = require("../app/model");
 const testData = require("./testData");
 
-const cfg = require("../config")
+const cfg = require("../config");
 
 /** require app and test it 
  * if make request - nock request with nock ...
@@ -17,18 +17,11 @@ const cfg = require("../config")
  */
 // https://hackernoon.com/testing-node-js-in-2018-10a04dd77391
 
-let mongoServer;
-
-describe("Check whole flow", () => {
+describe("Check request/response(req/res) cases: ", () => {
+  let mongoServer;
   let clock;
-  before((done) => {
-    /** mock - webrates request/response */
-    nock(cfg.request.urlRoot)
-      .get(/.*/)
-      .reply(200, () => {
-        return testData.okResponse;
-      });
 
+  before((done) => {
     /** mock - setup fakeTimer */
     clock = sinon.useFakeTimers({
       now: new Date(2019, 1, 1, 0, 15),
@@ -45,27 +38,53 @@ describe("Check whole flow", () => {
       .catch(done);
   });
 
-  it("Check if the stored objects in equal to input - 10", (done) => {
-    app().then(async () => {
-      const dbModel = model.getModel();
+  it("Check FAIL when req/res should return Error.", (done) => {
+    nock(cfg.request.urlRoot)
+      .get(/.*/)
+      .replyWithError({});
 
-      const totalPairs = await dbModel.countDocuments();
-      const pairs = await dbModel.find({});
+    app()
+      .then(done)
+      .catch((failErr) => {
+        expect(failErr).to.deep.equal(testData.expectedFail1);
+        done();
+      });
+  });
 
-      expect(totalPairs).to.equal(testData.expectedTotal);
-      expect(pairs[0]).to.include(testData.expectedPair0);
-      done();
-    })
-    .catch(async (err) => {
-      const dbModel = model.getModel();
-      const totalPairs = await dbModel.countDocuments();
+  it("Check FAIL when req/res is short(invalid).", (done) => {
+    nock(cfg.request.urlRoot)
+      .get(/.*/)
+      .reply(200, "Short response");
 
-      expect(totalPairs).to.equal(testData.expectedTotal);
-      done();
-    });
+    app()
+      .then(done)
+      .catch((emptyErr) => {
+        expect(emptyErr).to.deep.equal(testData.expectedFail2);
+        done();
+      });
+  });
+
+  it("Check OK when req/res is OK", (done) => {
+    nock(cfg.request.urlRoot)
+      .get(/.*/)
+      .reply(200, () => testData.okResponse);
+
+    app()
+      .then(async () => {
+        const dbModel = model.getModel();
+
+        // const totalPairs = await dbModel.countDocuments();
+        const pairs = await dbModel.find({});
+
+        expect(pairs.length).to.equal(testData.expectedLength);
+        expect(pairs[0]).to.include(testData.expectedPair);
+        done();
+      })
+      .catch(done);
   });
 
   after(() => {
     clock.restore();
+    mongoServer.stop();
   });
 });
