@@ -5,6 +5,7 @@
 const mongoose = require('mongoose')
 
 const cfg = require('../config')
+const model = require('./model')
 const Schema = mongoose.Schema
 const exportModel = {};
 
@@ -18,9 +19,17 @@ const rateSchema = new Schema({
   created: { type: Date, default: Date.now }
 })
 
-let rateModel = mongoose.model('rate', rateSchema)
+const getModel = () => {
+  const dbClient = model.getClient();
+  return dbClient.model("rate", rateSchema);
+}
 
-exportModel.ssave = function(ratesData) {
+exportModel.find = (query) => {
+  const rateModel = getModel();
+  return rateModel.find(query);
+}
+
+exportModel.save = function (ratesData) {
   let pairId, rate, rateDoc = {},
     saveData = [];
 
@@ -39,8 +48,10 @@ exportModel.ssave = function(ratesData) {
   }
 
   return new Promise((resolve, reject) => {
+    const rateModel = getModel();
     rateModel.insertMany(saveData)
-      .then(savedData => resolve(savedData), err => reject(err))
+      .then(resolve)
+      .catch(reject);
   })
 }
 

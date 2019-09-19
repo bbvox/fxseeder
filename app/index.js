@@ -35,7 +35,7 @@ const getData = () => {
       model.save(helper.str.parser(pairsData))
         .then(model.checkMinutes)
         .then(model.agregate)
-        .then(rate.ssave)
+        .then(rate.save)
         .then(agrData => resolve())
         .catch(err => reject(err))
     });

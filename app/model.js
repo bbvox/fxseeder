@@ -54,6 +54,8 @@ exportModel.close = () => {
   db.client.disconnect();
 }
 
+exportModel.getClient = () => (db.client);
+
 exportModel.getModel = () => (db.model);
 
 exportModel.save = (ratesData) => {
