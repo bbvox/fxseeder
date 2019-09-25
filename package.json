@@ -6,11 +6,14 @@
   "scripts": {
     "start:mongo": "echo \"{}\" > $npm_package_config_mongodb && node ./commands/mongodb.js",
     "start": "./index.js",
-    "debug": "./index.js --debug",
+    "start:debug": "./index.js --debug",
+    "debug": "node --inspect=9229 index.js",
+    "debug:brk": "node --inspect-brk index.js",
     "test": "mocha --recursive --timeout $npm_package_config_timeout --exit",
     "test:cover": "nyc --reporter=lcov ./node_modules/mocha/bin/mocha  --recursive --timeout $npm_package_config_timeout --exit",
     "test:lcov": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "test:cover-html": "nyc --reporter=html ./node_modules/mocha/bin/mocha  --recursive --timeout $npm_package_config_timeout --exit"
+    "test:cover-html": "nyc --reporter=html ./node_modules/mocha/bin/mocha  --recursive --timeout $npm_package_config_timeout --exit",
+    "test:debug": "mocha --timeout $npm_package_config_timeout --inspect-brk"
   },
   "author": "",
   "license": "ISC",
