@@ -30,7 +30,10 @@
       "type": "node",
       "request": "launch",
       "name": "debug : Program - directly",
-      "program": "${workspaceFolder}/index.js",
+      "program": "${workspaceFolder}/agr.js",
+      "args": [
+        "15m"
+      ],
       "skipFiles": [
         "node_modules/**/*.js"
       ]

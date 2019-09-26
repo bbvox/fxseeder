@@ -82,3 +82,21 @@ ONLY COMMAND LINE...
 ```
 C1=`./commands/index.js` && ./commands/get.js $C1
 ```
+
+*** Mongoose queries which did not return promise 
+```
+Model.deleteMany()
+Model.deleteOne()
+Model.find()
+Model.findById()
+Model.findByIdAndDelete()
+Model.findByIdAndRemove()
+Model.findByIdAndUpdate()
+Model.findOne()
+Model.findOneAndDelete()
+Model.findOneAndRemove()
+Model.findOneAndUpdate()
+Model.replaceOne()
+Model.updateMany()
+Model.updateOne()
+```

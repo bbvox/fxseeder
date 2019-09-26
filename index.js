@@ -19,7 +19,7 @@ if (debugFlag[0] && debugFlag[0] === "--debug") {
  * exit - 0 success 
  * exit - 1 fail operation
  */
-app()
+app.feeder()
   .then(() => process.exit(0))
   .catch(appErr => {
     global.debug && global.debug(appErr, "APP LEVEL - GENERAL");

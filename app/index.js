@@ -47,9 +47,14 @@ const getData = () => {
  * 2. make request
  * 3. store to mongoDB
  */
-module.exports = function () {
-  return model.connect()
-    .then(getData)
-    .then(data => Promise.resolve(data))
-    .catch(err => Promise.reject(err));
+module.exports = {
+  feeder: () => (
+    model.connect()
+      .then(getData)
+      .then(data => Promise.resolve(data))
+      .catch(err => Promise.reject(err))
+  ),
+  agregator: () => {
+    
+  }
 };

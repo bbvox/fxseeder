@@ -43,7 +43,7 @@ describe("Check request/response(req/res) cases: ", () => {
       .get(/.*/)
       .replyWithError({});
 
-    app()
+    app.feeder()
       .then(done)
       .catch((failErr) => {
         expect(failErr).to.deep.equal(testData.expectedFail1);
@@ -56,7 +56,7 @@ describe("Check request/response(req/res) cases: ", () => {
       .get(/.*/)
       .reply(200, "Short response");
 
-    app()
+    app.feeder()
       .then(done)
       .catch((emptyErr) => {
         expect(emptyErr).to.deep.equal(testData.expectedFail2);
@@ -69,7 +69,7 @@ describe("Check request/response(req/res) cases: ", () => {
       .get(/.*/)
       .reply(200, () => testData.okResponse);
 
-    app()
+    app.feeder()
       .then(async () => {
         const dbModel = model.getModel();
 
