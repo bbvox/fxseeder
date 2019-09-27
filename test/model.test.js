@@ -1,7 +1,7 @@
 const expect = require("chai").expect;
 const sinon = require("sinon");
 
-const model = require("../app/model");
+const model = require("../model");
 const testData = require("./testData");
 
 describe("Check General model methods: ", () => {

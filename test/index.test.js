@@ -5,7 +5,7 @@ const nock = require('nock');
 const mongoDb = require('mongodb-memory-server').MongoMemoryServer;
 
 const app = require("../app/");
-const model = require("../app/model");
+const model = require("../model");
 const testData = require("./testData");
 
 const cfg = require("../config");

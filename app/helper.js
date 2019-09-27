@@ -48,6 +48,51 @@ StringLayer.parser = function (splitArray) {
   return out;
 };
 
+let debugFlag = false;
+//argument Check 
+// if debug flag is set register process.debug
+const argvCheck = () => {
+  const cliParams = process.argv.slice(2);
+
+  global.debug = () => { };
+
+  if (cliParams[0] && cliParams[0] === "--debug") {
+    debugFlag = true
+    console.log(".: debug MODE :\x1b[31m ON \x1b[0m:");
+    global.debug = (debugData, area = "") => {
+      console.log(`.: \x1b[32m DEBUG \x1b[0m : ${new Date().toLocaleString()} - \x1b[32m ${area} : \x1b[0m`);
+      console.log(debugData);
+    };
+  }
+}
+
+const isDebug = () => (debugFlag)
+
+const cfg = require("../config/agr");
+//agregate flow
+// return Promise<>
+const getPeriods = () => {
+  const { periods, diffMs } = cfg;
+  const now = new Date().getTime();
+  // const now = new Date('August 20, 2018 03:32:00').getTime(); // use for testing
+
+  let agrPeriods = [];
+
+  Object.keys(periods).forEach(pkey => {
+    const diff = now % periods[pkey];
+    if (diff < diffMs) {
+      agrPeriods.push(pkey);
+    }
+  });
+
+  return (agrPeriods.length)
+    ? Promise.resolve(agrPeriods)
+    : Promise.reject();
+}
+
 module.exports = {
-  str: StringLayer
+  str: StringLayer,
+  argvCheck,
+  getPeriods,
+  isDebug
 };

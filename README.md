@@ -45,7 +45,7 @@ const rawSchema = new Schema({
 
 model.checkMinutes
 
-5. model.agregate select RawRates for last config.minPerPeriod
+5. model.aggregate select RawRates for last config.minPerPeriod
 
 dtime.to = now
 

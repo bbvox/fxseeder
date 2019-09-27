@@ -3,9 +3,9 @@ const sinon = require("sinon");
 
 const mongoDb = require('mongodb-memory-server').MongoMemoryServer;
 
-const rate = require("../app/rate");
+const rate = require("../model/rate");
 const testData = require("./testData");
-const model = require("../app/model");
+const model = require("../model");
 
 describe("Check Rate model methods: ", () => {
   let mongoServer;
