@@ -3,8 +3,7 @@
 const mongoose = require('mongoose');
 
 const model = require('./');
-const cfg = require('../config/agr');
-const hlp = require('../app/helper');
+const cfg = require('../config');
 
 /************************************
  *    ALL RATES MODEL here          *
@@ -19,14 +18,11 @@ const hlp = require('../app/helper');
 
 const exportModel = {};
 
-const ratesSchema = new mongoose.Schema(cfg.mongodb.rateSchema);
+const ratesSchema = new mongoose.Schema(cfg.mongo.rateSchema);
 
 // 1. find
 // 2. aggregate
 // 3. save
-// ROOT METHOD
-// return <Promise>
-// be careful with period ...
 exportModel.aggregate = (period) => {
   const srcModel = exportModel.getModel("source", period);
   const destModel = exportModel.getModel("destination", period);
@@ -36,7 +32,7 @@ exportModel.aggregate = (period) => {
   return exportModel.getData(srcModel)
     .then(exportModel.validateData)
     .then(exportModel.calcAgr)
-    .then((aggregateData) => exportModel.save(aggregateData, destModel))
+    .then((aggregateData) => exportModel.saveData(aggregateData, destModel))
     .catch(err => {
       // resolve to go on with promise.all from upper layer
       if (err.code === 1) {
@@ -53,8 +49,6 @@ exportModel.aggregate = (period) => {
 exportModel.validateData = (sourceData) => {
   let isValid = true;
 
-  // global.debug(sourceData, "Source data");
-
   sourceData.forEach(data => {
     if (!data.length) {
       isValid = false;
@@ -69,7 +63,7 @@ exportModel.validateData = (sourceData) => {
 exportModel.getData = (model) => {
   const { pairs } = cfg;
   const promises = [];
-  //collect promises
+
   for (let pkey in pairs) {
     promises.push(exportModel.getOnePair(pairs[pkey], model));
   }
@@ -103,35 +97,22 @@ exportModel.calcAgr = (pairsArray) => {
 }
 
 // save to destination Collection
-exportModel.save = (agrData, model) =>
+exportModel.saveData = (agrData, model) =>
   (model.insertMany(agrData))
 
 exportModel.getModel = (modelType, period) => {
-  const client = model.getClient();
+  const dbclient = model.getClient();
   if (modelType === "source") {
-    return client.model(cfg.mongodb.source[period], ratesSchema, cfg.mongodb.source[period]);
+    return dbclient.model(cfg.collections.source[period], ratesSchema, cfg.collections.source[period]);
   } else if (modelType === "destination") {
-    return client.model(cfg.mongodb.destination[period], ratesSchema, cfg.mongodb.destination[period]);
+    return dbclient.model(cfg.collections.destination[period], ratesSchema, cfg.collections.destination[period]);
   }
 }
 
-//// merge both FILES ...
-const cfg2 = require('../config')
-const Schema = mongoose.Schema
-
-const rateSchema = new Schema({
-  pairId: { type: Number, max: 200 },
-  pairName: String,
-  open: Number,
-  high: Number,
-  low: Number,
-  close: Number,
-  created: { type: Date, default: Date.now }
-})
-
+/** OLD ................... */
 const getModel = () => {
   const dbClient = model.getClient();
-  return dbClient.model("rate", rateSchema);
+  return dbClient.model("rate", ratesSchema);
 }
 
 exportModel.find = (query) => {
@@ -142,13 +123,17 @@ exportModel.find = (query) => {
 exportModel.save = function (ratesData) {
   let pairId, rate, rateDoc = {},
     saveData = [];
+  global.debug && global.debug(ratesData.length, "Rate save data length");
+
+  // array of names ["USD/EUR", ....]
+  const pairsName = Object.keys(cfg.pairs);
 
   for (var i in ratesData) {
     pairId = i.substr(2)
     rate = ratesData[i]
     rateDoc = {
       pairId: pairId,
-      pairName: cfg2.pairs[pairId],
+      pairName: pairsName[pairId],
       open: rate.open,
       high: rate.max,
       low: rate.min,
@@ -164,10 +149,5 @@ exportModel.save = function (ratesData) {
       .catch(reject);
   })
 }
-
-
-
-
-
 
 module.exports = exportModel;

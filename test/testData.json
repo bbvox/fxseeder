@@ -111,7 +111,7 @@
   "expectedRateLength": 3,
   "expectedRateSave": {
     "pairId": 0,
-    "pairName": "eur/usd",
+    "pairName": "EUR/USD",
     "open": 1.1755,
     "high": 1.1755,
     "low": 1.1755,

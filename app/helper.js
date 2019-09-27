@@ -68,11 +68,11 @@ const argvCheck = () => {
 
 const isDebug = () => (debugFlag)
 
-const cfg = require("../config/agr");
+const cfg = require("../config");
 //agregate flow
 // return Promise<>
 const getPeriods = () => {
-  const { periods, diffMs } = cfg;
+  const { periods, params: { allowedDelay } } = cfg;
   const now = new Date().getTime();
   // const now = new Date('August 20, 2018 03:32:00').getTime(); // use for testing
 
@@ -80,14 +80,14 @@ const getPeriods = () => {
 
   Object.keys(periods).forEach(pkey => {
     const diff = now % periods[pkey];
-    if (diff < diffMs) {
+    if (diff < allowedDelay) {
       agrPeriods.push(pkey);
     }
   });
 
   return (agrPeriods.length)
     ? Promise.resolve(agrPeriods)
-    : Promise.reject();
+    : Promise.reject({ err: "!helper.getPeriods - Not Found." });
 }
 
 module.exports = {

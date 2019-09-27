@@ -10,7 +10,7 @@ cache:
 
 install:
   - npm install
-  - cp config/index.json.sample config/index.json && echo "{}" > config/mongo.json
+  - cp config/index.js.sample config/index.js && echo "{}" > config/mongo.json
 
 script:
   - npm test

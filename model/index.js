@@ -50,25 +50,23 @@ exportModel.connect = (mongoDbTest = "") => {
   });
 }
 
-exportModel.close = () => {
-  db.client.disconnect();
-}
 
 exportModel.getClient = () => (db.client);
 
 exportModel.getModel = () => (db.model);
 
 exportModel.save = (ratesData) => {
-  let rawDoc = {}, diff, pairName, saveData = [];
+  let rawDoc = {}, diff, saveData = [];
 
   for (var i in ratesData) {
     let rate = ratesData[i];
-    pairName = rate.pair.toLowerCase();
+    // pairName = rate.pair.toLowerCase();
     diff = parseFloat(rate.high) - parseFloat(rate.low)
     diff = Math.abs(diff) / 2
     diff = parseFloat(diff.toFixed(6))
+    // id: cfg.pairs.indexOf(pairName),
     rawDoc = {
-      id: cfg.pairs.indexOf(pairName),
+      id: cfg.pairs[rate.pair],
       value: parseFloat(rate.low) + diff,
       ohlc: `${rate.open};${rate.high};${rate.low};${rate.close}`,
       time: rate.time
@@ -100,12 +98,12 @@ exportModel.checkMinutes = () => {
     if (!(minutes % cfg.minPerPeriod)) {
       resolve()
     } else {
-      reject({ error: "!checkMinutes." })
+      reject({ error: "! checkMinutes." })
     }
   })
 }
 
-// 900 000 - 60 * 1000 * 15 - 15 min in milliseconds
+// 15min = 900 000mS - 60 * 1000 * 15
 //open, min, max, close
 exportModel.agregate = () => {
   return new Promise((resolve, reject) => {
@@ -116,13 +114,10 @@ exportModel.agregate = () => {
 
     // !!! get rawRates for last 15 minutes
     db.model.find({ created: { $gte: dtime.from, $lt: dtime.to } })
-      // .limit(150).then(resData => {
       .then(resData => {
         let pairOhlc = {}
-        // !!! sort By pairID
         let pairsArray = exportModel.orderById(resData)
         for (var pairId in pairsArray) {
-          // !!! get OHLC for pairId
           pairOhlc[pairId] = exportModel.ohlc(pairsArray[pairId])
         }
 
@@ -150,7 +145,6 @@ exportModel.ohlc = pairArray => {
   return perPeriod;
 }
 
-// sorted{id1}
 exportModel.orderById = rawData => {
   let sorted = {}, key;
 
@@ -161,6 +155,10 @@ exportModel.orderById = rawData => {
   }
 
   return sorted;
+}
+
+exportModel.close = () => {
+  db.client.disconnect();
 }
 
 module.exports = exportModel;

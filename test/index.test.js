@@ -85,7 +85,6 @@ describe("Check request/response(req/res) cases: ", () => {
 
   after(() => {
     clock.restore();
-
     // mongoServer.stop();
   });
 });

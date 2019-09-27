@@ -1,0 +1,101 @@
+module.exports = (function () {
+
+  const config = {
+    request: {},
+    mongo: {},
+    pairs: {},
+    periods: {},
+    collections: {},
+    params: {
+      allowedDelay: 600000
+    }
+  };
+
+  // use to make third party request ...
+  config.request = {
+    urlRoot: "http://src_url.net",
+    urlPath: "/path/src",
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Cache-Control": "no-cache",
+      "Referrer": "https://src_url.net/path/src",
+      "Host": "webrates.truefx.com"
+    }
+  }
+
+  // required fields ...
+  const req = {
+    str: { type: String, required: true },
+    num: { type: Number, required: true }
+  }
+
+  config.mongo = {
+    host: "mongodb://127.0.0.1:27017/fxlines",
+    pollSize: 5,
+    options: {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      reconnectTries: 10,
+      reconnectInterval: 200,
+      connectTimeoutMS: 1000
+    },
+    rateSchema: {
+      pairId: { type: Number, max: 200 },
+      pairName: req.str,
+      open: req.num,
+      high: req.num,
+      close: req.num,
+      low: req.num,
+      // period: req.num,
+      published: { type: Date, default: Date.now }
+    }
+  }
+
+  config.pairs = {
+    'EUR/USD': 0,
+    'USD/JPY': 1,
+    'GBP/USD': 2,
+    'EUR/GBP': 3,
+    'USD/CHF': 4,
+    'EUR/JPY': 5,
+    'EUR/CHF': 6,
+    'USD/CAD': 7,
+    'AUD/USD': 8,
+    'GBP/JPY': 9
+  }
+
+  //1s = 1000 mS
+  //1m = 60000 mS
+  //15m = 900000 mS (1000 * 60 * 15)
+  // 1h = 3600000 mS (15m * 4)
+  config.periods = {
+    "15m": 900000,
+    "1h": 3600000,
+    "4h": 14400000,
+    "1d": 86400000,
+    "1w": 604800000
+  };
+
+  // for aggregation 
+  //  - find from source and save aggregate 
+  //    data to destination collections
+  config.collections = {
+    source: {
+      '15m': 'rates',
+      '1h': 'rates15m',
+      '4h': 'rates1h',
+      '1d': 'rates4h',
+      '1w': 'rates1d'
+    },
+    destination: {
+      '15m': 'rates15m',
+      '1h': 'rates1h',
+      '4h': 'rates4h',
+      '1d': 'rates1d',
+      '1w': 'rates1w'
+    }
+  }
+
+  return config;
+})();
