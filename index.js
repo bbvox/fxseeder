@@ -4,7 +4,7 @@
 const app = require("./app");
 const hlp = require("./app/helper");
 
-hlp.argvCheck();
+hlp.argvCheckDebug();
 
 /** 
  * exit - 0 success 

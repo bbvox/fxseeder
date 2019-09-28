@@ -50,7 +50,6 @@ exportModel.connect = (mongoDbTest = "") => {
   });
 }
 
-
 exportModel.getClient = () => (db.client);
 
 exportModel.getModel = () => (db.model);

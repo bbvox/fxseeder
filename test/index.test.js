@@ -22,6 +22,8 @@ describe("Check request/response(req/res) cases: ", () => {
   let clock;
 
   before((done) => {
+    global.debug = () => { };
+
     /** mock - setup fakeTimer */
     clock = sinon.useFakeTimers({
       now: new Date(2019, 1, 1, 0, 15),

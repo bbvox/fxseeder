@@ -116,5 +116,8 @@
     "high": 1.1755,
     "low": 1.1755,
     "close": 1.1755
+  },
+  "expectAgrFail": { 
+    "err": "!helper.getPeriods - Not Found."
   }
 }

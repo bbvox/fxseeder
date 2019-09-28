@@ -44,26 +44,10 @@ exportModel.aggregate = (period) => {
     })
 }
 
-// Check if some of the promises return empty result
-// and return copy of the data
-exportModel.validateData = (sourceData) => {
-  let isValid = true;
-
-  sourceData.forEach(data => {
-    if (!data.length) {
-      isValid = false;
-    }
-  });
-  return isValid
-    ? Promise.resolve(JSON.parse(JSON.stringify(sourceData)))
-    : Promise.reject({ err: "Empty response from query", code: 1 });
-}
-
 // get source DATA ....
 exportModel.getData = (model) => {
   const { pairs } = cfg;
   const promises = [];
-
   for (let pkey in pairs) {
     promises.push(exportModel.getOnePair(pairs[pkey], model));
   }
@@ -76,6 +60,21 @@ exportModel.getData = (model) => {
 exportModel.getOnePair = (pairId, model) => {
   return model.find({ pairId }).select({ _id: 0, created: 0 }).limit(5).exec();
 }
+
+// Check if some of the promises return empty result
+// and return copy of the data
+exportModel.validateData = (sourceData) => {
+  let isValid = true;
+  sourceData.forEach(data => {
+    if (!data.length) {
+      isValid = false;
+    }
+  });
+  return isValid
+    ? Promise.resolve(JSON.parse(JSON.stringify(sourceData)))
+    : Promise.reject({ err: "Empty response from query", code: 1 });
+}
+
 
 exportModel.calcAgr = (pairsArray) => {
   if (!pairsArray.length) {

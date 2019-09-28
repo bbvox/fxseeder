@@ -51,18 +51,17 @@ StringLayer.parser = function (splitArray) {
 let debugFlag = false;
 //argument Check 
 // if debug flag is set register process.debug
-const argvCheck = () => {
+const argvCheckDebug = () => {
   const cliParams = process.argv.slice(2);
 
   global.debug = () => { };
 
   if (cliParams[0] && cliParams[0] === "--debug") {
-    debugFlag = true
-    console.log(".: debug MODE :\x1b[31m ON \x1b[0m:");
     global.debug = (debugData, area = "") => {
       console.log(`.: \x1b[32m DEBUG \x1b[0m : ${new Date().toLocaleString()} - \x1b[32m ${area} : \x1b[0m`);
       console.log(debugData);
     };
+    debugFlag = true
   }
 }
 
@@ -92,7 +91,7 @@ const getPeriods = () => {
 
 module.exports = {
   str: StringLayer,
-  argvCheck,
+  argvCheckDebug,
   getPeriods,
   isDebug
 };

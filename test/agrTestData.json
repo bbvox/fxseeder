@@ -1,0 +1,105 @@
+{
+  "blankData": [
+    {
+      "pairId": 0,
+      "pairName": "eur/usd",
+      "open": 1.1755,
+      "high": 1.1755,
+      "low": 1.1755,
+      "close": 1.1755,
+      "published": "2019-09-28T00:40:54.079Z"
+    },
+    {
+      "pairId": 1,
+      "pairName": "usd/jpy",
+      "open": 112.6325,
+      "high": 112.6325,
+      "low": 112.6325,
+      "close": 112.6325,
+      "published": "2019-09-28T00:40:54.089Z"
+    },
+    {
+      "pairId": 2,
+      "pairName": "gbp/usd",
+      "open": 1.332415,
+      "high": 1.332415,
+      "low": 1.332415,
+      "close": 1.332415,
+      "created": "2017-12-16T01:51:02.531Z"
+    },
+    {
+      "pairId": 3,
+      "pairName": "eur/gbp",
+      "open": 0.882245,
+      "high": 0.882245,
+      "low": 0.882245,
+      "close": 0.882245,
+      "created": "2017-12-16T01:51:02.531Z"
+    },
+    {
+      "pairId": 4,
+      "pairName": "usd/chf",
+      "open": 0.989815,
+      "high": 0.989815,
+      "low": 0.989815,
+      "close": 0.989815,
+      "created": "2017-12-16T01:51:02.532Z"
+    },
+    {
+      "pairId": 5,
+      "pairName": "eur/jpy",
+      "open": 132.399,
+      "high": 132.399,
+      "low": 132.399,
+      "close": 132.399,
+      "created": "2017-12-16T01:51:02.532Z"
+    },
+    {
+      "pairId": 6,
+      "pairName": "eur/chf",
+      "open": 1.163535,
+      "high": 1.163535,
+      "low": 1.163535,
+      "close": 1.163535,
+      "created": "2017-12-16T01:51:02.532Z"
+    },
+    {
+      "pairId": 7,
+      "pairName": "usd/cad",
+      "open": 1.28847,
+      "high": 1.28847,
+      "low": 1.28847,
+      "close": 1.28847,
+      "created": "2017-12-16T01:51:02.532Z"
+    },
+    {
+      "pairId": 8,
+      "pairName": "aud/usd",
+      "open": 0.76437,
+      "high": 0.76437,
+      "low": 0.76437,
+      "close": 0.76437,
+      "created": "2017-12-16T01:51:02.532Z"
+    },
+    {
+      "pairId": 9,
+      "pairName": "gbp/jpy",
+      "open": 150.0765,
+      "high": 150.0765,
+      "low": 150.0765,
+      "close": 150.0765,
+      "created": "2017-12-16T01:51:02.532Z"
+    }
+  ],
+  "expectedResult": [
+    {
+      "pairId": 3,
+      "pairName": "eur/gbp",
+      "open": 0.882245,
+      "high": 0.882245,
+      "low": 0.882245,
+      "close": 0.882245,
+      "__v": 0
+    }
+  ]
+}
