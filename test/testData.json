@@ -3,7 +3,7 @@
   "expectedLength": 10,
   "expectedPair": {
     "__v": 0,
-    "id": 0,
+    "pairId": 0,
     "value": 1.10194,
     "ohlc": "1.10211;1.10195;1.10193;1.09899"
   },
@@ -117,7 +117,7 @@
     "low": 1.1755,
     "close": 1.1755
   },
-  "expectAgrFail": { 
+  "expectAgrFail": {
     "err": "!helper.getPeriods - Not Found."
   }
 }

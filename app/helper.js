@@ -68,7 +68,7 @@ const argvCheckDebug = () => {
 const isDebug = () => (debugFlag)
 
 const cfg = require("../config");
-//agregate flow
+//aggregate flow
 // return Promise<>
 const getPeriods = () => {
   const { periods, params: { allowedDelay } } = cfg;

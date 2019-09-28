@@ -65,21 +65,22 @@ exportModel.getOnePair = (pairId, model) => {
 // and return copy of the data
 exportModel.validateData = (sourceData) => {
   let isValid = true;
-  sourceData.forEach(data => {
-    if (!data.length) {
-      isValid = false;
-    }
-  });
+
+  if (!sourceData.length) {
+    isValid = false;
+  } else {
+    sourceData.forEach(pairData => {
+      if (!pairData.length) {
+        isValid = false;
+      }
+    });
+  }
   return isValid
     ? Promise.resolve(JSON.parse(JSON.stringify(sourceData)))
     : Promise.reject({ err: "Empty response from query", code: 1 });
 }
 
-
 exportModel.calcAgr = (pairsArray) => {
-  if (!pairsArray.length) {
-    return Promise.reject({ err: "Empty source records ." });
-  }
   let agrPairs = [];
   pairsArray.forEach((pair, idx) => {
     agrPairs[idx] = {

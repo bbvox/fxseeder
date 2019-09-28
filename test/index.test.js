@@ -44,7 +44,6 @@ describe("Check request/response(req/res) cases: ", () => {
     nock(cfg.request.urlRoot)
       .get(/.*/)
       .replyWithError({});
-
     app.feeder()
       .then(done)
       .catch((failErr) => {
@@ -70,14 +69,10 @@ describe("Check request/response(req/res) cases: ", () => {
     nock(cfg.request.urlRoot)
       .get(/.*/)
       .reply(200, () => testData.okResponse);
-
     app.feeder()
       .then(async () => {
         const dbModel = model.getModel();
-
-        // const totalPairs = await dbModel.countDocuments();
         const pairs = await dbModel.find({});
-
         expect(pairs.length).to.equal(testData.expectedLength);
         expect(pairs[0]).to.include(testData.expectedPair);
         done();

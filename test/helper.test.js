@@ -4,6 +4,7 @@ const sinon = require("sinon");
 const hlp = require("../app/helper");
 
 describe("Check helper argument Check for Debug - argvCheckDebug method: ", () => {
+  let logStub;
   before(() => {
     process.argv[2] = "--debug";
   });
@@ -15,12 +16,17 @@ describe("Check helper argument Check for Debug - argvCheckDebug method: ", () =
   });
 
   it("Check OK should console.log with errorData.", () => {
-    sinon.stub(console, 'log');
+    logStub = sinon.stub(console, 'log');
 
     hlp.argvCheckDebug();
     global.debug({ err: "message" }, "test");
 
-    expect(console.log.calledTwice).to.be.true;
-    expect(console.log.calledWith({ err: "message" })).to.be.true;
+    expect(logStub.calledTwice).to.be.true;
+    expect(logStub.calledWith({ err: "message" })).to.be.true;
   });
+
+  after(() => {
+    logStub.restore();
+    process.argv[2] = "--recursive";
+  })
 });

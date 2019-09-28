@@ -26,8 +26,11 @@ module.exports = (function () {
 
   // required fields ...
   const req = {
+    pid: { type: Number, max: 200, required: true },
     str: { type: String, required: true },
-    num: { type: Number, required: true }
+    num: { type: Number, required: true },
+    date: { type: Date, required: true },
+    dateNow: { type: Date, default: Date.now }
   }
 
   config.mongo = {
@@ -40,15 +43,22 @@ module.exports = (function () {
       reconnectInterval: 200,
       connectTimeoutMS: 1000
     },
+    rrateSchema: {
+      pairId: req.pid,
+      value: req.num,
+      ohlc: req.str,
+      time: req.date,
+      created: req.dateNow
+    },
     rateSchema: {
-      pairId: { type: Number, max: 200 },
+      pairId: req.pid,
       pairName: req.str,
       open: req.num,
       high: req.num,
       close: req.num,
       low: req.num,
       // period: req.num,
-      published: { type: Date, default: Date.now }
+      created: req.dateNow
     }
   }
 

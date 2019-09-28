@@ -10,6 +10,7 @@ const rateModel = require("../model/rate")
 const feeder = () => {
   return model.connect()
     .then(http.getData)
+    .then(model.save)
     .then(data => Promise.resolve(data))
     .catch(err => Promise.reject(err))
 }

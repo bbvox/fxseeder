@@ -15,13 +15,7 @@ const mongoHost = liveCfg.host || cfg.mongo.host;
 const db = {
   client: false,
   model: false,
-  schema: new mongoose.Schema({
-    id: Number,
-    value: Number,
-    ohlc: String,
-    time: Date,
-    created: { type: Date, default: Date.now }
-  })
+  schema: new mongoose.Schema(cfg.mongo.rrateSchema)
 };
 
 const exportModel = {};
@@ -59,13 +53,11 @@ exportModel.save = (ratesData) => {
 
   for (var i in ratesData) {
     let rate = ratesData[i];
-    // pairName = rate.pair.toLowerCase();
     diff = parseFloat(rate.high) - parseFloat(rate.low)
     diff = Math.abs(diff) / 2
     diff = parseFloat(diff.toFixed(6))
-    // id: cfg.pairs.indexOf(pairName),
     rawDoc = {
-      id: cfg.pairs[rate.pair],
+      pairId: cfg.pairs[rate.pair],
       value: parseFloat(rate.low) + diff,
       ohlc: `${rate.open};${rate.high};${rate.low};${rate.close}`,
       time: rate.time
@@ -104,26 +96,26 @@ exportModel.checkMinutes = () => {
 
 // 15min = 900 000mS - 60 * 1000 * 15
 //open, min, max, close
-exportModel.agregate = () => {
-  return new Promise((resolve, reject) => {
-    let dtime = {}, minFrom;
-    dtime.to = new Date()
-    minFrom = 60 * 1000 * cfg.minPerPeriod;
-    dtime.from = new Date(dtime.to.getTime() - minFrom)
+// exportModel.agregate = () => {
+//   return new Promise((resolve, reject) => {
+//     let dtime = {}, minFrom;
+//     dtime.to = new Date()
+//     minFrom = 60 * 1000 * cfg.minPerPeriod;
+//     dtime.from = new Date(dtime.to.getTime() - minFrom)
 
-    // !!! get rawRates for last 15 minutes
-    db.model.find({ created: { $gte: dtime.from, $lt: dtime.to } })
-      .then(resData => {
-        let pairOhlc = {}
-        let pairsArray = exportModel.orderById(resData)
-        for (var pairId in pairsArray) {
-          pairOhlc[pairId] = exportModel.ohlc(pairsArray[pairId])
-        }
+//     // !!! get rawRates for last 15 minutes
+//     db.model.find({ created: { $gte: dtime.from, $lt: dtime.to } })
+//       .then(resData => {
+//         let pairOhlc = {}
+//         let pairsArray = exportModel.orderById(resData)
+//         for (var pairId in pairsArray) {
+//           pairOhlc[pairId] = exportModel.ohlc(pairsArray[pairId])
+//         }
 
-        resolve(pairOhlc)
-      })
-  })
-}
+//         resolve(pairOhlc)
+//       })
+//   })
+// }
 
 exportModel.ohlc = pairArray => {
   let perPeriod = {};
