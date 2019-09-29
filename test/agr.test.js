@@ -78,12 +78,12 @@ describe("Check aggregate cases: ", () => {
       app.aggregate()
         .then(() => {
           rateModel.getOnePair(3, dbCheckModel)
-            .then(dataPairId3 => {
+            .then(dataSid3 => {
               // ugly copy because response contain other properties
-              let pairId3 = JSON.parse(JSON.stringify(dataPairId3[0]));
-              delete pairId3.published;
+              let sid3 = JSON.parse(JSON.stringify(dataSid3[0]));
+              delete sid3.published;
 
-              expect(pairId3).to.deep.equal(agrTestData.expectedResult[0]);
+              expect(sid3).to.deep.equal(agrTestData.expectedResult[0]);
               done()
             })
         })
@@ -99,6 +99,6 @@ describe("Check aggregate cases: ", () => {
 
   after((done) => {
     // delete inserted records 
-    dbModel.deleteMany({}, done)
+    dbModel.deleteMany({}, done);
   })
 })

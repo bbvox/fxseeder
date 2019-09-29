@@ -57,7 +57,7 @@ exportModel.save = (ratesData) => {
     diff = Math.abs(diff) / 2
     diff = parseFloat(diff.toFixed(6))
     rawDoc = {
-      pairId: cfg.pairs[rate.pair],
+      sid: cfg.pairs[rate.symbol],
       value: parseFloat(rate.low) + diff,
       ohlc: `${rate.open};${rate.high};${rate.low};${rate.close}`,
       time: rate.time
@@ -74,7 +74,7 @@ exportModel.save = (ratesData) => {
     global.debug && global.debug(saveData, "mongoDB saveData");
 
     db.model.insertMany(saveData)
-      .then(savedData => resolve(savedData),
+      .then(savedData => resolve(ratesData),
         err => reject(err))
   })
 }
@@ -93,29 +93,6 @@ exportModel.checkMinutes = () => {
     }
   })
 }
-
-// 15min = 900 000mS - 60 * 1000 * 15
-//open, min, max, close
-// exportModel.agregate = () => {
-//   return new Promise((resolve, reject) => {
-//     let dtime = {}, minFrom;
-//     dtime.to = new Date()
-//     minFrom = 60 * 1000 * cfg.minPerPeriod;
-//     dtime.from = new Date(dtime.to.getTime() - minFrom)
-
-//     // !!! get rawRates for last 15 minutes
-//     db.model.find({ created: { $gte: dtime.from, $lt: dtime.to } })
-//       .then(resData => {
-//         let pairOhlc = {}
-//         let pairsArray = exportModel.orderById(resData)
-//         for (var pairId in pairsArray) {
-//           pairOhlc[pairId] = exportModel.ohlc(pairsArray[pairId])
-//         }
-
-//         resolve(pairOhlc)
-//       })
-//   })
-// }
 
 exportModel.ohlc = pairArray => {
   let perPeriod = {};

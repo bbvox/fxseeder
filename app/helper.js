@@ -36,7 +36,7 @@ StringLayer.splitter = function (fxData) {
 
 //strange mapper
 StringLayer.parser = function (splitArray) {
-  var out = [], map = ["pair", "low", "low", "high", "high", "open", "close", "time"];
+  var out = [], map = ["symbol", "low", "low", "high", "high", "open", "close", "time"];
   for (var i = 0; i <= splitArray.length - 1; i++) {
     for (var i2 = 0; i2 <= splitArray[i].length - 1; i2++) {
       out[i2] || (out[i2] = {});
@@ -48,6 +48,7 @@ StringLayer.parser = function (splitArray) {
   return out;
 };
 
+// additional helpers
 let debugFlag = false;
 //argument Check 
 // if debug flag is set register process.debug

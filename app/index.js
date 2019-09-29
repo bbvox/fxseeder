@@ -11,6 +11,7 @@ const feeder = () => {
   return model.connect()
     .then(http.getData)
     .then(model.save)
+    .then(rateModel.saveData)
     .then(data => Promise.resolve(data))
     .catch(err => Promise.reject(err))
 }

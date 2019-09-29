@@ -25,14 +25,6 @@ const getData = () => {
       let pairsData = helper.str.splitter(bodyHtml);
 
       resolve(helper.str.parser(pairsData));
-
-      // save in rrates collection - RAW RATES on every minutes...
-      // model.save(helper.str.parser(pairsData))
-      // .then(model.checkMinutes)
-      // .then(model.agregate)
-      // .then(rate.save)
-      // .then(agrData => resolve())
-      // .catch(err => reject(err))
     });
   });
 }

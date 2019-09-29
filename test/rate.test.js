@@ -23,6 +23,7 @@ describe("Check Rate model methods: ", () => {
     rate.save(testData.inputRateSave)
       .then(dataSave => {
         rate.find({}).then(rates => {
+
           expect(rates.length).to.equal(testData.expectedRateLength);
           expect(rates[0]).to.include(testData.expectedRateSave);
           done();

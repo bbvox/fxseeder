@@ -6,6 +6,7 @@ const mongoDb = require('mongodb-memory-server').MongoMemoryServer;
 
 const app = require("../app/");
 const model = require("../model");
+const rateModel = require("../model/rate");
 const testData = require("./testData");
 
 const cfg = require("../config");
@@ -80,8 +81,11 @@ describe("Check request/response(req/res) cases: ", () => {
       .catch(done);
   });
 
-  after(() => {
+  after((done) => {
     clock.restore();
+    // clear collection after operation 
+    rateModel.deleteAll()
+      .then(done);
     // mongoServer.stop();
   });
 });

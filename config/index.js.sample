@@ -44,15 +44,15 @@ module.exports = (function () {
       connectTimeoutMS: 1000
     },
     rrateSchema: {
-      pairId: req.pid,
+      sid: req.pid,
       value: req.num,
       ohlc: req.str,
       time: req.date,
       created: req.dateNow
     },
     rateSchema: {
-      pairId: req.pid,
-      pairName: req.str,
+      sid: req.pid,
+      symbol: req.str,
       open: req.num,
       high: req.num,
       close: req.num,

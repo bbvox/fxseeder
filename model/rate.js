@@ -32,7 +32,7 @@ exportModel.aggregate = (period) => {
   return exportModel.getData(srcModel)
     .then(exportModel.validateData)
     .then(exportModel.calcAgr)
-    .then((aggregateData) => exportModel.saveData(aggregateData, destModel))
+    .then((aggregateData) => exportModel.saveAgrData(aggregateData, destModel))
     .catch(err => {
       // resolve to go on with promise.all from upper layer
       if (err.code === 1) {
@@ -55,10 +55,10 @@ exportModel.getData = (model) => {
   return Promise.all(promises);
 }
 
-// find rates for one period one pairId
+// find rates for one period one sid
 // toDO explicitly set limit for created ---
-exportModel.getOnePair = (pairId, model) => {
-  return model.find({ pairId }).select({ _id: 0, created: 0 }).limit(5).exec();
+exportModel.getOnePair = (sid, model) => {
+  return model.find({ sid }).select({ _id: 0, created: 0 }).limit(5).exec();
 }
 
 // Check if some of the promises return empty result
@@ -97,7 +97,7 @@ exportModel.calcAgr = (pairsArray) => {
 }
 
 // save to destination Collection
-exportModel.saveData = (agrData, model) =>
+exportModel.saveAgrData = (agrData, model) =>
   (model.insertMany(agrData))
 
 exportModel.getModel = (modelType, period) => {
@@ -106,7 +106,19 @@ exportModel.getModel = (modelType, period) => {
     return dbclient.model(cfg.collections.source[period], ratesSchema, cfg.collections.source[period]);
   } else if (modelType === "destination") {
     return dbclient.model(cfg.collections.destination[period], ratesSchema, cfg.collections.destination[period]);
+  } else {
+    return dbclient.model("rates", ratesSchema);
   }
+}
+
+// save RATES data 
+exportModel.saveData = (ratesData) => {
+  const dbModel = exportModel.getModel();
+  // add sid
+  const rates = ratesData.map(rate =>
+    ({ ...rate, sid: cfg.pairs[rate.symbol] }));
+
+  return dbModel.insertMany(rates);
 }
 
 /** OLD ................... */
@@ -121,7 +133,7 @@ exportModel.find = (query) => {
 }
 
 exportModel.save = function (ratesData) {
-  let pairId, rate, rateDoc = {},
+  let symbolId, rate, rateDoc = {},
     saveData = [];
   global.debug && global.debug(ratesData.length, "Rate save data length");
 
@@ -129,11 +141,11 @@ exportModel.save = function (ratesData) {
   const pairsName = Object.keys(cfg.pairs);
 
   for (var i in ratesData) {
-    pairId = i.substr(2)
+    symbolId = i.substr(2)
     rate = ratesData[i]
     rateDoc = {
-      pairId: pairId,
-      pairName: pairsName[pairId],
+      sid: symbolId,
+      symbol: pairsName[symbolId],
       open: rate.open,
       high: rate.max,
       low: rate.min,
@@ -147,6 +159,14 @@ exportModel.save = function (ratesData) {
     rateModel.insertMany(saveData)
       .then(resolve)
       .catch(reject);
+  })
+}
+
+exportModel.deleteAll = () => {
+  return new Promise((res, rej) => {
+    getModel().deleteMany({}, () => {
+      res();
+    });
   })
 }
 

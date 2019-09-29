@@ -22,8 +22,8 @@ const rawSchema = new Schema({
 })
 
 const rateSchema = new Schema({
-    pairId: { type: Number, max: 200 },
-    pairName: String,
+    sid: { type: Number, max: 200 },
+    symbol: String,
     open: Number,
     high: Number,
     low: Number,
