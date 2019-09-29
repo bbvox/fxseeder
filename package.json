@@ -4,7 +4,7 @@
   "description": "Seed data from sites",
   "main": "index.js",
   "scripts": {
-    "start:mongo": "echo \"{}\" > $npm_package_config_mongodb && node ./commands/mongodb.js",
+    "start:mongodb": "echo \"{}\" > $npm_package_config_mongodb && node ./commands/mongodb.js",
     "start": "./index.js",
     "start:debug": "./index.js --debug",
     "debug": "node --inspect=9229 index.js",

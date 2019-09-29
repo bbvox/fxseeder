@@ -57,8 +57,10 @@ exportModel.getData = (model) => {
   return Promise.all(promises);
 }
 
-// find rates for one period one sid
+// find rates for one period one sid / pairID
 // toDO explicitly set limit for created ---
+// toDO remove limit
+// ! ! !
 exportModel.getOnePair = (sid, model) => {
   return model.find({ sid }).select({ _id: 0, created: 0 }).limit(5).exec();
 }
@@ -127,7 +129,7 @@ exportModel.saveData = (ratesData) => {
   const dbModel = exportModel.getModel();
   // add sid
   const rates = ratesData.map(rate =>
-    ({ ...rate, sid: cfg.pairs[rate.symbol] }));
+    ({ sid: cfg.pairs[rate.symbol], ...rate }));
 
   return dbModel.insertMany(rates);
 }
