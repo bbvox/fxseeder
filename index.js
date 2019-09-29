@@ -4,6 +4,8 @@
 const app = require("./app");
 const hlp = require("./app/helper");
 
+// check process.argv for debug flag(--debug)
+// - if present define global.debug
 hlp.argvCheckDebug();
 
 /** 

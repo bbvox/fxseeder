@@ -1,14 +1,10 @@
 const expect = require("chai").expect;
 const sinon = require("sinon");
-const nock = require('nock');
-
 const mongoDb = require('mongodb-memory-server').MongoMemoryServer;
 
 const app = require("../app/");
 const model = require("../model");
 const rateModel = require("../model/rate");
-
-const testData = require("./testData");
 const agrTestData = require("./agrTestData");
 
 describe("Check aggregate cases: ", () => {
@@ -45,7 +41,7 @@ describe("Check aggregate cases: ", () => {
     app.aggregate()
       .then(done)
       .catch(failErr => {
-        expect(failErr).to.deep.equal(testData.expectAgrFail);
+        expect(failErr).to.deep.equal(agrTestData.expectAgrFail);
         done();
       });
   });
@@ -82,7 +78,6 @@ describe("Check aggregate cases: ", () => {
               // ugly copy because response contain other properties
               let sid3 = JSON.parse(JSON.stringify(dataSid3[0]));
               delete sid3.published;
-
               expect(sid3).to.deep.equal(agrTestData.expectedResult[0]);
               done()
             })

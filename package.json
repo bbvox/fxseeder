@@ -10,7 +10,7 @@
     "debug": "node --inspect=9229 index.js",
     "debug:brk": "node --inspect-brk index.js",
     "test": "mocha --recursive --timeout $npm_package_config_timeout --exit",
-    "test:test1": "mocha test/index.test.js --recursive --timeout $npm_package_config_timeout --exit",
+    "test:test1": "mocha test/agr.test.js --recursive --timeout $npm_package_config_timeout --exit",
     "test:cover": "nyc --reporter=lcov ./node_modules/mocha/bin/mocha  --recursive --timeout $npm_package_config_timeout --exit",
     "test:lcov": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:cover-html": "nyc --reporter=html ./node_modules/mocha/bin/mocha  --recursive --timeout $npm_package_config_timeout --exit",

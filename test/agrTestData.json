@@ -1,12 +1,15 @@
 {
+  "expectAgrFail": {
+    "err": "!helper.getPeriods - Not Found."
+  },
   "blankData": [
     {
       "sid": 0,
       "symbol": "eur/usd",
       "open": 1.1755,
-      "high": 1.1755,
+      "high": 1.1855,
       "low": 1.1755,
-      "close": 1.1755,
+      "close": 1.1855,
       "published": "2019-09-28T00:40:54.079Z"
     },
     {
@@ -31,9 +34,18 @@
       "sid": 3,
       "symbol": "eur/gbp",
       "open": 0.882245,
-      "high": 0.882245,
+      "high": 0.885245,
       "low": 0.882245,
-      "close": 0.882245,
+      "close": 0.885245,
+      "created": "2017-12-16T01:51:02.531Z"
+    },
+    {
+      "sid": 3,
+      "symbol": "eur/gbp",
+      "open": 0.885245,
+      "high": 0.893245,
+      "low": 0.885245,
+      "close": 0.893245,
       "created": "2017-12-16T01:51:02.531Z"
     },
     {
@@ -96,9 +108,9 @@
       "sid": 3,
       "symbol": "eur/gbp",
       "open": 0.882245,
-      "high": 0.882245,
+      "high": 0.893245,
       "low": 0.882245,
-      "close": 0.882245,
+      "close": 0.893245,
       "__v": 0
     }
   ]

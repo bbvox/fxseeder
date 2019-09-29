@@ -12,6 +12,10 @@ const getRequest = () => ({
   }
 });
 
+/**
+ * 1. get data from source
+ * 2. extract it
+ */
 const getData = () => {
   return new Promise((resolve, reject) => {
     req(getRequest(), (err, res, bodyHtml) => {

@@ -6,23 +6,25 @@ const model = require('./');
 const cfg = require('../config');
 
 /************************************
- *    ALL RATES MODEL here          *
- *    - rates15m                    *
- *    - rates1h                     *
- *    - rates4h                     *
- *    - rates1d                     *
- *    - rates1w                     *
+ *    rate.METHODS - MAIN           *
+ *    - aggregate                   *
+ *    -- getData                    *
+ *    -- validateData               *
+ *    -- calcAgr                    *
+ *    -- saveAgrData                *
  *                                  *
- *    - rates                       *
  ************************************/
 
 const exportModel = {};
 
 const ratesSchema = new mongoose.Schema(cfg.mongo.rateSchema);
 
-// 1. find
-// 2. aggregate
-// 3. save
+/**
+ * 1. getData - find from source collection
+ * 2. validateData - check every pairs return result & deep copy of data
+ * 3. calcAgr - calculate aggregate data
+ * 4. saveAgrData - save aggregate data into destination collection
+ */
 exportModel.aggregate = (period) => {
   const srcModel = exportModel.getModel("source", period);
   const destModel = exportModel.getModel("destination", period);
@@ -80,6 +82,13 @@ exportModel.validateData = (sourceData) => {
     : Promise.reject({ err: "Empty response from query", code: 1 });
 }
 
+/**
+ * calcAgr
+ * calculate aggregate data based pairsArray
+ * @param {array} - source data
+ * 
+ * @returns {Promise} - with aggregate data
+ */
 exportModel.calcAgr = (pairsArray) => {
   let agrPairs = [];
   pairsArray.forEach((pair, idx) => {
@@ -89,7 +98,9 @@ exportModel.calcAgr = (pairsArray) => {
 
     pair.forEach(one => {
       (agrPairs[idx].high < one.high) && (agrPairs[idx].high = one.high);
-      (agrPairs[idx].low < one.low) && (agrPairs[idx].low = one.low);
+      (agrPairs[idx].low > one.low) && (agrPairs[idx].low = one.low);
+
+      agrPairs[idx].close = one.close;
     });
   })
 
