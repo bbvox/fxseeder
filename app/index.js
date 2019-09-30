@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const http = require("./http")
-const hlp = require("./helper")
-const model = require("../model")
-const rateModel = require("../model/rate")
+const http = require("./http");
+const hlp = require("./helper");
+const model = require("../model");
+const rateModel = require("../model/rate");
 
 /**
  * 1. connect to mongoDB
@@ -12,11 +12,12 @@ const rateModel = require("../model/rate")
  * 4. store into rates collection
  */
 const feeder = () => {
-  return model.connect()
+  return model
+    .connect()
     .then(http.getData)
     .then(model.save)
-    .then(rateModel.saveData)
-}
+    .then(rateModel.saveData);
+};
 
 /**
  * 1. connect
@@ -24,11 +25,11 @@ const feeder = () => {
  * 3. aggregate & save
  */
 const aggregate = () => {
-  return model.connect()
+  return model
+    .connect()
     .then(hlp.getPeriods)
-    .then(periods =>
-      Promise.all(periods.map(rateModel.aggregate)))
-}
+    .then(periods => Promise.all(periods.map(rateModel.aggregate)));
+};
 
 module.exports = {
   feeder,

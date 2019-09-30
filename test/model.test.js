@@ -15,10 +15,11 @@ describe("Check General model methods: ", () => {
     });
   });
 
-  it("CheckMinutes FAIL should return reject / error.", (done) => {
-    model.checkMinutes()
+  it("CheckMinutes FAIL should return reject / error.", done => {
+    model
+      .checkMinutes()
       .then(done)
-      .catch((failErr) => {
+      .catch(failErr => {
         expect(failErr).to.deep.equal(testData.modelFail1);
         done();
       });

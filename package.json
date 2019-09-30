@@ -15,7 +15,8 @@
     "test:lcov": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:cover-html": "nyc --reporter=html ./node_modules/mocha/bin/mocha  --recursive --timeout $npm_package_config_timeout --exit",
     "test:debug": "mocha --timeout $npm_package_config_timeout --inspect-brk",
-    "start:aggregate": "./agr.js"
+    "start:aggregate": "./agr.js",
+    "eslint": "eslint app/**/*.js test/**/*.js --no-fix"
   },
   "author": "",
   "license": "ISC",

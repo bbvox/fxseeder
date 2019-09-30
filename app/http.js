@@ -1,6 +1,6 @@
-const req = require("request")
-const cfg = require("../config")
-const helper = require("./helper")
+const req = require("request");
+const cfg = require("../config");
+const helper = require("./helper");
 
 const getRequest = () => ({
   ...cfg.request,
@@ -31,7 +31,7 @@ const getData = () => {
       resolve(helper.str.parser(pairsData));
     });
   });
-}
+};
 
 module.exports = {
   getData

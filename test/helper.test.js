@@ -16,7 +16,7 @@ describe("Check helper argument Check for Debug - argvCheckDebug method: ", () =
   });
 
   it("Check OK should console.log with errorData.", () => {
-    logStub = sinon.stub(console, 'log');
+    logStub = sinon.stub(console, "log");
 
     hlp.argvCheckDebug();
     global.debug({ err: "message" }, "test");
@@ -28,5 +28,5 @@ describe("Check helper argument Check for Debug - argvCheckDebug method: ", () =
   after(() => {
     logStub.restore();
     process.argv[2] = "--recursive";
-  })
+  });
 });

@@ -1,6 +1,6 @@
 const expect = require("chai").expect;
 const sinon = require("sinon");
-const mongoDb = require('mongodb-memory-server').MongoMemoryServer;
+const mongoDb = require("mongodb-memory-server").MongoMemoryServer;
 
 const app = require("../app/");
 const model = require("../model");
@@ -12,8 +12,8 @@ describe("Check aggregate cases: ", () => {
   let clock;
   let dbModel;
 
-  before((done) => {
-    global.debug = () => { };
+  before(done => {
+    global.debug = () => {};
 
     clock = sinon.useFakeTimers({
       now: new Date(2019, 1, 1, 0, 16),
@@ -31,14 +31,15 @@ describe("Check aggregate cases: ", () => {
 
   // config.periods = ['15m', '1h', '4h' ...]
   // have allowedDelay - 60000mS(10m)
-  it("Check FAIL when time is not divide by periods.", (done) => {
+  it("Check FAIL when time is not divide by periods.", done => {
     clock = sinon.useFakeTimers({
       now: new Date(2019, 1, 1, 0, 11),
       shouldAdvanceTime: true,
       advanceTimeDelta: 20
     });
 
-    app.aggregate()
+    app
+      .aggregate()
       .then(done)
       .catch(failErr => {
         expect(failErr).to.deep.equal(agrTestData.expectAgrFail);
@@ -46,22 +47,27 @@ describe("Check aggregate cases: ", () => {
       });
   });
 
-  // and exit on second step 
-  it("Check OK when periods is divide by 15min, ! but WITHOUT " +
-    "\n\r data in source collection and exit on second check validateData", (done) => {
+  // and exit on second step
+  it(
+    "Check OK when periods is divide by 15min, ! but WITHOUT " +
+      "\n\r data in source collection and exit on second check validateData",
+    done => {
       // exit with 0
-      app.aggregate()
+      app
+        .aggregate()
         .then(() => {
+          console.log("---- >>>>");
           expect(true).to.be.true;
-          done()
+          done();
         })
-        .catch(done);
-    });
+        .catch(() => done());
+    }
+  );
 
-  // whole flow 
+  // whole flow
   // aggregate data from 1m period(collection) and store into 15m period
-  it("Check OK when periods is divide by 15min.", (done) => {
-    // 1. Insert blank data into mongoDB source collection - rates 
+  it("Check OK when periods is divide by 15min.", done => {
+    // 1. Insert blank data into mongoDB source collection - rates
     // 2. Start app.aggregate
     // 3. Check mongoDb destination collection - rates15m
 
@@ -70,21 +76,23 @@ describe("Check aggregate cases: ", () => {
     // rates15m
     const dbCheckModel = rateModel.getModel("destination", "15m");
 
-    dbModel.insertMany(agrTestData.blankData).then(() => {
-      app.aggregate()
-        .then(() => {
-          rateModel.getOnePair(3, dbCheckModel)
-            .then(dataSid3 => {
+    dbModel
+      .insertMany(agrTestData.blankData)
+      .then(() => {
+        app
+          .aggregate()
+          .then(() => {
+            rateModel.getOnePair(3, dbCheckModel).then(dataSid3 => {
               // ugly copy because response contain other properties
               let sid3 = JSON.parse(JSON.stringify(dataSid3[0]));
               delete sid3.published;
               expect(sid3).to.deep.equal(agrTestData.expectedResult[0]);
-              done()
-            })
-        })
-        .catch(done);
-    })
-      .catch(done)
+              done();
+            });
+          })
+          .catch(() => done());
+      })
+      .catch(() => done());
   });
 
   afterEach(() => {
@@ -92,8 +100,8 @@ describe("Check aggregate cases: ", () => {
     // mongoServer.stop();
   });
 
-  after((done) => {
-    // delete inserted records 
+  after(done => {
+    // delete inserted records
     dbModel.deleteMany({}, done);
-  })
-})
+  });
+});

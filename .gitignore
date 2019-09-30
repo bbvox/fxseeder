@@ -1,6 +1,7 @@
 node_modules/
 config/*.js
 config/*.json
+config/*.js
 
 test/coverage.html
 coverage
