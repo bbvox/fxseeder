@@ -4,7 +4,7 @@
   "description": "Seed data from sites",
   "main": "index.js",
   "scripts": {
-    "install": "npm install --only=prod",
+    "instal-prod": "npm install --only=prod",
     "start:mongodb": "echo \"{}\" > $npm_package_config_mongodb && node ./commands/mongodb.js",
     "start": "./index.js",
     "start:debug": "./index.js --debug",
