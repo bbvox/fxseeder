@@ -84,6 +84,8 @@ const rawSchema = new Schema({
 
 2. CLI redirection Get output from one command and pass it to another.
 
+3. require('folder') - require order is : index.js then index.json if both of them are present
+
 ONLY COMMAND LINE...
 ```
 C1=`./commands/index.js` && ./commands/get.js $C1
