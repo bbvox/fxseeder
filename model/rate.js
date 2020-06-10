@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-const model = require('./');
+const model = require('./index');
 const cfg = require('../config');
 
 /************************************
@@ -124,21 +124,22 @@ exportModel.getModel = (modelType, period) => {
   }
 }
 
-// save RATES data 
+// save RATES data - feeder
 exportModel.saveData = (ratesData) => {
   const dbModel = exportModel.getModel();
   // add sid
   const rates = ratesData.map(rate =>
-    ({ sid: cfg.pairs[rate.symbol], ...rate }));
+    ({ pid: cfg.pairs[rate.pair], ...rate }));
 
   return dbModel.insertMany(rates);
 }
 
+
 /** OLD ................... */
-const getModel = () => {
-  const dbClient = model.getClient();
-  return dbClient.model("rate", ratesSchema);
-}
+  const getModel = () => {
+    const dbClient = model.getClient();
+    return dbClient.model("rate", ratesSchema);
+  }
 
 exportModel.find = (query) => {
   const rateModel = getModel();

@@ -2,7 +2,7 @@
 
 const http = require("./http");
 const hlp = require("./helper");
-const model = require("../model");
+const model = require("../model/index");
 const rateModel = require("../model/rate");
 
 /**
@@ -15,7 +15,7 @@ const feeder = () => {
   return model
     .connect()
     .then(http.getData)
-    .then(model.save)
+    // .then(model.save)
     .then(rateModel.saveData);
 };
 

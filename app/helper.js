@@ -40,7 +40,7 @@ StringLayer.splitter = function(fxData) {
 //strange mapper
 StringLayer.parser = function(splitArray) {
   var out = [],
-    map = ["symbol", "low", "low", "high", "high", "open", "close", "time"];
+    map = ["pair", "low", "low", "high", "high", "open", "close", "time"];
   for (var i = 0; i <= splitArray.length - 1; i++) {
     for (var i2 = 0; i2 <= splitArray[i].length - 1; i2++) {
       out[i2] || (out[i2] = {});
@@ -91,11 +91,12 @@ const getPeriods = () => {
 
   Object.keys(periods).forEach(pkey => {
     const diff = now % periods[pkey];
+    console.log(diff, pkey, periods[pkey]);
     if (diff < allowedDelay) {
       agrPeriods.push(pkey);
     }
   });
-
+console.log(agrPeriods);
   return agrPeriods.length
     ? Promise.resolve(agrPeriods)
     : Promise.reject({ err: "!helper.getPeriods - Not Found." });
