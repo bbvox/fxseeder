@@ -17,6 +17,7 @@
     "test:cover-html": "nyc --reporter=html ./node_modules/mocha/bin/mocha  --recursive --timeout $npm_package_config_timeout --exit",
     "test:debug": "mocha --timeout $npm_package_config_timeout --inspect-brk",
     "start:aggregate": "./agr.js",
+    "start:aggregate:debug": "./agr.js --debug",
     "eslint": "eslint app/**/*.js test/**/*.js --no-fix"
   },
   "author": "",
@@ -28,7 +29,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "coveralls": "^3.1.0",
-    "mocha": "^6.2.0",
+    "mocha": "^6.2.3",
     "mongodb-memory-server": "^5.2.3",
     "nock": "^11.3.4",
     "nyc": "^14.1.1",

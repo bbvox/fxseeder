@@ -96,7 +96,9 @@ const getPeriods = () => {
       agrPeriods.push(pkey);
     }
   });
-  // console.log(agrPeriods);
+
+  global.debug && global.debug(agrPeriods, "HELPER LEVEL - PERIODS");
+  
   return agrPeriods.length
     ? Promise.resolve(agrPeriods)
     : Promise.reject({ err: "!helper.getPeriods - Not Found." });

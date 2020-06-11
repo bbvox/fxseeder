@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const model = require('./index');
-const cfg = require('../config');
+const model = require("./index");
+const cfg = require("../config");
 
 /************************************
  *    rate.METHODS - MAIN           *
@@ -31,11 +31,12 @@ exportModel.aggregate = (period) => {
 
   global.debug && global.debug(period, "Aggregate period");
 
-  return exportModel.getData(srcModel)
+  return exportModel
+    .getData(srcModel)
     .then(exportModel.validateData)
     .then(exportModel.calcAgr)
     .then((aggregateData) => exportModel.saveAgrData(aggregateData, destModel))
-    .catch(err => {
+    .catch((err) => {
       // resolve to go on with promise.all from upper layer
       if (err.code === 1) {
         global.debug && global.debug(err, "Aggregate root function");
@@ -43,8 +44,8 @@ exportModel.aggregate = (period) => {
       } else {
         return Promise.reject();
       }
-    })
-}
+    });
+};
 
 // get source DATA ....
 exportModel.getData = (model) => {
@@ -55,15 +56,15 @@ exportModel.getData = (model) => {
   }
 
   return Promise.all(promises);
-}
+};
 
 // find rates for one period one sid / pairID
 // toDO explicitly set limit for created ---
 // toDO remove limit
 // ! ! !
-exportModel.getOnePair = (sid, model) => {
-  return model.find({ sid }).select({ _id: 0, created: 0 }).limit(5).exec();
-}
+exportModel.getOnePair = (pid, model) => {
+  return model.find({ pid }).select({ _id: 0, created: 0 }).limit(5).exec();
+};
 
 // Check if some of the promises return empty result
 // and return copy of the data
@@ -73,7 +74,7 @@ exportModel.validateData = (sourceData) => {
   if (!sourceData.length) {
     isValid = false;
   } else {
-    sourceData.forEach(pairData => {
+    sourceData.forEach((pairData) => {
       if (!pairData.length) {
         isValid = false;
       }
@@ -82,72 +83,82 @@ exportModel.validateData = (sourceData) => {
   return isValid
     ? Promise.resolve(JSON.parse(JSON.stringify(sourceData)))
     : Promise.reject({ err: "Empty response from query", code: 1 });
-}
+};
 
 /**
  * calcAgr
  * calculate aggregate data based pairsArray
  * @param {array} - source data
- * 
+ *
  * @returns {Promise} - with aggregate data
  */
 exportModel.calcAgr = (pairsArray) => {
   let agrPairs = [];
   pairsArray.forEach((pair, idx) => {
     agrPairs[idx] = {
-      ...pair[0]
+      ...pair[0],
     };
 
-    pair.forEach(one => {
-      (agrPairs[idx].high < one.high) && (agrPairs[idx].high = one.high);
-      (agrPairs[idx].low > one.low) && (agrPairs[idx].low = one.low);
+    pair.forEach((one) => {
+      agrPairs[idx].high < one.high && (agrPairs[idx].high = one.high);
+      agrPairs[idx].low > one.low && (agrPairs[idx].low = one.low);
 
       agrPairs[idx].close = one.close;
     });
-  })
+  });
 
   return Promise.resolve(agrPairs);
-}
+};
 
 // save to destination Collection
-exportModel.saveAgrData = (agrData, model) =>
-  (model.insertMany(agrData))
+exportModel.saveAgrData = (agrData, model) => model.insertMany(agrData);
 
 exportModel.getModel = (modelType, period) => {
   const dbclient = model.getClient();
   if (modelType === "source") {
-    return dbclient.model(cfg.collections.source[period], ratesSchema, cfg.collections.source[period]);
+    return dbclient.model(
+      cfg.collections.source[period],
+      ratesSchema,
+      cfg.collections.source[period]
+    );
   } else if (modelType === "destination") {
-    return dbclient.model(cfg.collections.destination[period], ratesSchema, cfg.collections.destination[period]);
+    return dbclient.model(
+      cfg.collections.destination[period],
+      ratesSchema,
+      cfg.collections.destination[period]
+    );
   } else {
     return dbclient.model("rates", ratesSchema);
   }
-}
+};
 
 // save RATES data - feeder
 exportModel.saveData = (ratesData) => {
   const dbModel = exportModel.getModel();
   // add sid
-  const rates = ratesData.map(rate =>
-    ({ pid: cfg.pairs[rate.pair], ...rate }));
+  const rates = ratesData.map((rate) => ({
+    pid: cfg.pairs[rate.pair],
+    ...rate,
+  }));
 
   return dbModel.insertMany(rates);
-}
-
+};
 
 /** OLD ................... */
-  const getModel = () => {
-    const dbClient = model.getClient();
-    return dbClient.model("rate", ratesSchema);
-  }
+const getModel = () => {
+  const dbClient = model.getClient();
+  return dbClient.model("rate", ratesSchema);
+};
 
 exportModel.find = (query) => {
   const rateModel = getModel();
   return rateModel.find(query);
-}
+};
 
 exportModel.save = function (ratesData) {
-  let pid, rate, rateDoc = {},
+  let pid,
+    rate,
+    rateDoc = {},
     saveData = [];
   global.debug && global.debug(ratesData.length, "Rate save data length");
 
@@ -155,8 +166,8 @@ exportModel.save = function (ratesData) {
   const pairsName = Object.keys(cfg.pairs);
 
   for (var i in ratesData) {
-    pid = i.substr(2)
-    rate = ratesData[i]
+    pid = i.substr(2);
+    rate = ratesData[i];
     rateDoc = {
       pid: pid,
       pair: pairsName[pid],
@@ -164,25 +175,23 @@ exportModel.save = function (ratesData) {
       high: rate.max,
       low: rate.min,
       close: rate.close,
-      time: rate.time
-    }
-    saveData.push(rateDoc)
+      time: rate.time,
+    };
+    saveData.push(rateDoc);
   }
 
   return new Promise((resolve, reject) => {
     const rateModel = getModel();
-    rateModel.insertMany(saveData)
-      .then(resolve)
-      .catch(reject);
-  })
-}
+    rateModel.insertMany(saveData).then(resolve).catch(reject);
+  });
+};
 
 exportModel.deleteAll = () => {
   return new Promise((res, rej) => {
     getModel().deleteMany({}, () => {
       res();
     });
-  })
-}
+  });
+};
 
 module.exports = exportModel;
