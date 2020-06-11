@@ -56,7 +56,6 @@ describe("Check aggregate cases: ", () => {
       app
         .aggregate()
         .then(() => {
-          console.log("---- >>>>");
           expect(true).to.be.true;
           done();
         })

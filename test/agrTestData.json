@@ -4,8 +4,8 @@
   },
   "blankData": [
     {
-      "sid": 0,
-      "symbol": "eur/usd",
+      "pid": 0,
+      "pair": "eur/usd",
       "open": 1.1755,
       "high": 1.1855,
       "low": 1.1755,
@@ -13,8 +13,8 @@
       "published": "2019-09-28T00:40:54.079Z"
     },
     {
-      "sid": 1,
-      "symbol": "usd/jpy",
+      "pid": 1,
+      "pair": "usd/jpy",
       "open": 112.6325,
       "high": 112.6325,
       "low": 112.6325,
@@ -22,8 +22,8 @@
       "published": "2019-09-28T00:40:54.089Z"
     },
     {
-      "sid": 2,
-      "symbol": "gbp/usd",
+      "pid": 2,
+      "pair": "gbp/usd",
       "open": 1.332415,
       "high": 1.332415,
       "low": 1.332415,
@@ -31,8 +31,8 @@
       "created": "2017-12-16T01:51:02.531Z"
     },
     {
-      "sid": 3,
-      "symbol": "eur/gbp",
+      "pid": 3,
+      "pair": "eur/gbp",
       "open": 0.882245,
       "high": 0.885245,
       "low": 0.882245,
@@ -40,8 +40,8 @@
       "created": "2017-12-16T01:51:02.531Z"
     },
     {
-      "sid": 3,
-      "symbol": "eur/gbp",
+      "pid": 3,
+      "pair": "eur/gbp",
       "open": 0.885245,
       "high": 0.893245,
       "low": 0.885245,
@@ -49,8 +49,8 @@
       "created": "2017-12-16T01:51:02.531Z"
     },
     {
-      "sid": 4,
-      "symbol": "usd/chf",
+      "pid": 4,
+      "pair": "usd/chf",
       "open": 0.989815,
       "high": 0.989815,
       "low": 0.989815,
@@ -58,8 +58,8 @@
       "created": "2017-12-16T01:51:02.532Z"
     },
     {
-      "sid": 5,
-      "symbol": "eur/jpy",
+      "pid": 5,
+      "pair": "eur/jpy",
       "open": 132.399,
       "high": 132.399,
       "low": 132.399,
@@ -67,8 +67,8 @@
       "created": "2017-12-16T01:51:02.532Z"
     },
     {
-      "sid": 6,
-      "symbol": "eur/chf",
+      "pid": 6,
+      "pair": "eur/chf",
       "open": 1.163535,
       "high": 1.163535,
       "low": 1.163535,
@@ -76,8 +76,8 @@
       "created": "2017-12-16T01:51:02.532Z"
     },
     {
-      "sid": 7,
-      "symbol": "usd/cad",
+      "pid": 7,
+      "pair": "usd/cad",
       "open": 1.28847,
       "high": 1.28847,
       "low": 1.28847,
@@ -85,8 +85,8 @@
       "created": "2017-12-16T01:51:02.532Z"
     },
     {
-      "sid": 8,
-      "symbol": "aud/usd",
+      "pid": 8,
+      "pair": "aud/usd",
       "open": 0.76437,
       "high": 0.76437,
       "low": 0.76437,
@@ -94,8 +94,8 @@
       "created": "2017-12-16T01:51:02.532Z"
     },
     {
-      "sid": 9,
-      "symbol": "gbp/jpy",
+      "pid": 9,
+      "pair": "gbp/jpy",
       "open": 150.0765,
       "high": 150.0765,
       "low": 150.0765,
@@ -105,8 +105,8 @@
   ],
   "expectedResult": [
     {
-      "sid": 3,
-      "symbol": "eur/gbp",
+      "pid": 3,
+      "pair": "eur/gbp",
       "open": 0.882245,
       "high": 0.893245,
       "low": 0.882245,

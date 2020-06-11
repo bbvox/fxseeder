@@ -147,7 +147,7 @@ exportModel.find = (query) => {
 }
 
 exportModel.save = function (ratesData) {
-  let symbolId, rate, rateDoc = {},
+  let pid, rate, rateDoc = {},
     saveData = [];
   global.debug && global.debug(ratesData.length, "Rate save data length");
 
@@ -155,15 +155,16 @@ exportModel.save = function (ratesData) {
   const pairsName = Object.keys(cfg.pairs);
 
   for (var i in ratesData) {
-    symbolId = i.substr(2)
+    pid = i.substr(2)
     rate = ratesData[i]
     rateDoc = {
-      sid: symbolId,
-      symbol: pairsName[symbolId],
+      pid: pid,
+      pair: pairsName[pid],
       open: rate.open,
       high: rate.max,
       low: rate.min,
-      close: rate.close
+      close: rate.close,
+      time: rate.time
     }
     saveData.push(rateDoc)
   }

@@ -68,22 +68,6 @@ describe("Check request/response(req/res) cases: ", () => {
       });
   });
 
-  it("Check OK when req/res is OK", done => {
-    nock(cfg.request.urlRoot)
-      .get(/.*/)
-      .reply(200, () => testData.okResponse);
-    app
-      .feeder()
-      .then(async () => {
-        const dbModel = model.getModel();
-        const pairs = await dbModel.find({});
-        expect(pairs.length).to.equal(testData.expectedLength);
-        expect(pairs[0]).to.include(testData.expectedPair);
-        done();
-      })
-      .catch(done);
-  });
-
   after(done => {
     clock.restore();
     // clear collection after operation

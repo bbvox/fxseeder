@@ -5,7 +5,7 @@
  */
 var StringLayer = {};
 
-StringLayer.splitter = function(fxData) {
+StringLayer.splitter = function (fxData) {
   var total = 10;
   var circles = [7, 4, 3, 4, 3, 7, 7, 13];
 
@@ -17,7 +17,7 @@ StringLayer.splitter = function(fxData) {
   //insert into array
   // EUR/USD, USD/JPY, GBP/USD
   // 123., 1.50, 0.70,
-  splitIt = function(string, length) {
+  splitIt = function (string, length) {
     var arr = [],
       start = 0;
     for (var i = 0; i < total; i++) {
@@ -38,7 +38,7 @@ StringLayer.splitter = function(fxData) {
 };
 
 //strange mapper
-StringLayer.parser = function(splitArray) {
+StringLayer.parser = function (splitArray) {
   var out = [],
     map = ["pair", "low", "low", "high", "high", "open", "close", "time"];
   for (var i = 0; i <= splitArray.length - 1; i++) {
@@ -82,21 +82,21 @@ const cfg = require("../config");
 const getPeriods = () => {
   const {
     periods,
-    params: { allowedDelay }
+    params: { allowedDelay },
   } = cfg;
   const now = new Date().getTime();
   // const now = new Date('August 20, 2018 03:32:00').getTime(); // use for testing
 
   let agrPeriods = [];
 
-  Object.keys(periods).forEach(pkey => {
+  Object.keys(periods).forEach((pkey) => {
     const diff = now % periods[pkey];
-    console.log(diff, pkey, periods[pkey]);
+    // console.log(diff, pkey, periods[pkey]);
     if (diff < allowedDelay) {
       agrPeriods.push(pkey);
     }
   });
-console.log(agrPeriods);
+  // console.log(agrPeriods);
   return agrPeriods.length
     ? Promise.resolve(agrPeriods)
     : Promise.reject({ err: "!helper.getPeriods - Not Found." });
@@ -106,5 +106,5 @@ module.exports = {
   str: StringLayer,
   argvCheckDebug,
   getPeriods,
-  isDebug
+  isDebug,
 };
