@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 const model = require("./index");
 const cfg = require("../config");
+const { periods } = require("../config");
 
 /************************************
  *    rate.METHODS - MAIN           *
@@ -32,9 +33,9 @@ exportModel.aggregate = (period) => {
   global.debug && global.debug(period, "Aggregate period");
 
   return exportModel
-    .getData(srcModel)
+    .getData(srcModel, period)
     .then(exportModel.validateData)
-    .then(exportModel.calcAgr)
+    .then((pairs) => exportModel.calcAgr(pairs, periods))
     .then((aggregateData) => exportModel.saveAgrData(aggregateData, destModel))
     .catch((err) => {
       // resolve to go on with promise.all from upper layer
@@ -48,29 +49,32 @@ exportModel.aggregate = (period) => {
 };
 
 // get source DATA ....
-exportModel.getData = (model) => {
+exportModel.getData = (model, period) => {
   const { pairs } = cfg;
   const promises = [];
   for (let pkey in pairs) {
-    promises.push(exportModel.getOnePair(pairs[pkey], model));
+    promises.push(exportModel.getPairBy({ pid: pairs[pkey], period }, model));
   }
 
   return Promise.all(promises);
 };
 
-// find rates for one period one sid / pairID
-// toDO explicitly set limit for created ---
-// toDO remove limit
-// ! ! !
-exportModel.getOnePair = (pid, model) => {
-  return model.find({ pid }).select({ _id: 0, created: 0 }).limit(5).exec();
+// find pair rates by pid(pairID) & period
+// toDO remove limit - if
+exportModel.getPairBy = ({ pid, period }, model) => {
+  // start From now - period time - 1m (execution)
+  const startFrom = new Date().getTime() - cfg.periods[period] - 60000;
+  const query = {
+    pid,
+    created: { $gt: startFrom },
+  };
+  return model.find(query).select({ _id: 0, created: 0 }).limit(7).exec();
 };
 
 // Check if some of the promises return empty result
 // and return copy of the data
 exportModel.validateData = (sourceData) => {
   let isValid = true;
-
   if (!sourceData.length) {
     isValid = false;
   } else {
@@ -87,27 +91,37 @@ exportModel.validateData = (sourceData) => {
 
 /**
  * calcAgr
- * calculate aggregate data based pairsArray
- * @param {array} - source data
+ * calculate aggregate data based pairs
+ * @param {array} - pairs source data
+ * @param {string} - period
  *
  * @returns {Promise} - with aggregate data
  */
-exportModel.calcAgr = (pairsArray) => {
-  let agrPairs = [];
-  pairsArray.forEach((pair, idx) => {
-    agrPairs[idx] = {
+exportModel.calcAgr = (pairs, period) => {
+  let pairsAgr = [];
+  pairs.forEach((pair, idx) => {
+    pairsAgr[idx] = {
       ...pair[0],
+      time: exportModel.getTimeAgr(period)
     };
 
     pair.forEach((one) => {
-      agrPairs[idx].high < one.high && (agrPairs[idx].high = one.high);
-      agrPairs[idx].low > one.low && (agrPairs[idx].low = one.low);
+      pairsAgr[idx].high < one.high && (pairsAgr[idx].high = one.high);
+      pairsAgr[idx].low > one.low && (pairsAgr[idx].low = one.low);
 
-      agrPairs[idx].close = one.close;
+      pairsAgr[idx].close = one.close;
     });
   });
 
   return Promise.resolve(agrPairs);
+};
+
+// because all aggregation happen 1 minute after the period
+// need to subtract one period
+exportModel.getTimeAgr = (period) => {
+  var periodMs = cfg.periods[period];
+  var nowDate = new Date(); //or use any other date
+  return new Date((Math.round(nowDate.getTime() / periodMs) * periodMs));
 };
 
 // save to destination Collection

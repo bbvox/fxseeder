@@ -8,8 +8,8 @@ const getRequest = () => ({
   qs: {
     l: "n",
     t: 1,
-    query: Math.random()
-  }
+    query: Math.random(),
+  },
 });
 
 /**
@@ -19,13 +19,13 @@ const getRequest = () => ({
 const getData = () => {
   return new Promise((resolve, reject) => {
     req(getRequest(), (err, res, bodyHtml) => {
+      global.debug && global.debug(bodyHtml, " source response ");
       if (err) {
         return reject({ message: "Wrong or missing source website ." });
       } else if (!bodyHtml || bodyHtml.length < 100) {
         return reject({ message: "Source website is missing/broken ." });
       }
 
-      global.debug && global.debug(bodyHtml, " source response ");
       let pairsData = helper.str.splitter(bodyHtml);
 
       resolve(helper.str.parser(pairsData));
@@ -34,5 +34,5 @@ const getData = () => {
 };
 
 module.exports = {
-  getData
+  getData,
 };

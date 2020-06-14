@@ -75,26 +75,37 @@ describe("Check aggregate cases: ", () => {
     // rates15m
     const dbCheckModel = rateModel.getModel("destination", "15m");
 
+    // const blankData = agrTestData.blankData.map((bdata) => ({
+    //   ...bdata,
+    //   time: new Date().getTime(),
+    //   created: new Date().getTime(),
+    // }));
+    // const blankData = agrTestData.blankData
+
     dbModel
       .insertMany(agrTestData.blankData)
       .then(() => {
         app
           .aggregate()
           .then(() => {
-            rateModel.getOnePair(3, dbCheckModel).then((pairData) => {
-              // mongoose
-              const [pair] = JSON.parse(JSON.stringify(pairData)); // get first pair
-              const [pairExpected] = agrTestData.expectedResult; // get FIRST !!!
-              expect(pair).to.deep.equal(pairExpected);
-              done();
-            });
+            rateModel
+              .getPairBy({ pid: 3, period: "15m" }, dbCheckModel)
+              .then((pairData) => {
+                // mongoose
+                const [pair] = JSON.parse(JSON.stringify(pairData)); // get first pair
+                const [pairExpected] = agrTestData.expectedResult; // get FIRST !!!
+                expect(pair).to.deep.equal(pairExpected);
+                done();
+              });
           })
           .catch((err1) => {
+            console.log("err1 ::: ", err1);
             expect(false).to.be.true;
             done();
           });
-      })
-      .catch((err2) => {
+        })
+        .catch((err2) => {
+          console.log("err2 ::: ", err2);
         expect(false).to.be.true;
         done();
       });
