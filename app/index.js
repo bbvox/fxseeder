@@ -22,7 +22,7 @@ const feeder = () => {
 /**
  * 1. connect
  * 2. getPeriod - ["15m", "1h", "4h"...]
- * 3. aggregate & save
+ * 3. aggregate per pair per period & save
  */
 const aggregate = () => {
   return model

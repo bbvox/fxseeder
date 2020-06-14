@@ -135,7 +135,6 @@ exportModel.getModel = (modelType, period) => {
 // save RATES data - feeder
 exportModel.saveData = (ratesData) => {
   const dbModel = exportModel.getModel();
-  // add sid
   const rates = ratesData.map((rate) => ({
     pid: cfg.pairs[rate.pair],
     ...rate,

@@ -12,13 +12,13 @@ describe("Check aggregate cases: ", () => {
   let clock;
   let dbModel;
 
-  before(done => {
+  before((done) => {
     global.debug = () => {};
 
     clock = sinon.useFakeTimers({
       now: new Date(2019, 1, 1, 0, 16),
       shouldAdvanceTime: true,
-      advanceTimeDelta: 20
+      advanceTimeDelta: 20,
     });
     /** start inMemory mongoDB server ... */
     mongoServer = new mongoDb();
@@ -31,17 +31,17 @@ describe("Check aggregate cases: ", () => {
 
   // config.periods = ['15m', '1h', '4h' ...]
   // have allowedDelay - 60000mS(10m)
-  it("Check FAIL when time is not divide by periods.", done => {
+  it("Check FAIL when time is not divide by periods.", (done) => {
     clock = sinon.useFakeTimers({
       now: new Date(2019, 1, 1, 0, 11),
       shouldAdvanceTime: true,
-      advanceTimeDelta: 20
+      advanceTimeDelta: 20,
     });
 
     app
       .aggregate()
       .then(done)
-      .catch(failErr => {
+      .catch((failErr) => {
         expect(failErr).to.deep.equal(agrTestData.expectAgrFail);
         done();
       });
@@ -51,7 +51,7 @@ describe("Check aggregate cases: ", () => {
   it(
     "Check OK when periods is divide by 15min, ! but WITHOUT " +
       "\n\r data in source collection and exit on second check validateData",
-    done => {
+    (done) => {
       // exit with 0
       app
         .aggregate()
@@ -65,7 +65,7 @@ describe("Check aggregate cases: ", () => {
 
   // whole flow
   // aggregate data from 1m period(collection) and store into 15m period
-  it("Check OK when periods is divide by 15min.", done => {
+  it("Check OK when periods is divide by 15min - calcAgr.", (done) => {
     // 1. Insert blank data into mongoDB source collection - rates
     // 2. Start app.aggregate
     // 3. Check mongoDb destination collection - rates15m
@@ -81,17 +81,23 @@ describe("Check aggregate cases: ", () => {
         app
           .aggregate()
           .then(() => {
-            rateModel.getOnePair(3, dbCheckModel).then(dataSid3 => {
-              // ugly copy because response contain other properties
-              let sid3 = JSON.parse(JSON.stringify(dataSid3[0]));
-              delete sid3.published;
-              expect(sid3).to.deep.equal(agrTestData.expectedResult[0]);
+            rateModel.getOnePair(3, dbCheckModel).then((pairData) => {
+              // mongoose
+              const [pair] = JSON.parse(JSON.stringify(pairData)); // get first pair
+              const [pairExpected] = agrTestData.expectedResult; // get FIRST !!!
+              expect(pair).to.deep.equal(pairExpected);
               done();
             });
           })
-          .catch(() => done());
+          .catch((err1) => {
+            expect(false).to.be.true;
+            done();
+          });
       })
-      .catch(() => done());
+      .catch((err2) => {
+        expect(false).to.be.true;
+        done();
+      });
   });
 
   afterEach(() => {
@@ -99,7 +105,7 @@ describe("Check aggregate cases: ", () => {
     // mongoServer.stop();
   });
 
-  after(done => {
+  after((done) => {
     // delete inserted records
     dbModel.deleteMany({}, done);
   });
