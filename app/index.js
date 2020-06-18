@@ -8,14 +8,12 @@ const rateModel = require("../model/rate");
 /**
  * 1. connect to mongoDB
  * 2. get data from source
- * 3. store into rrates collection
- * 4. store into rates collection
+ * 3. store into rates collection
  */
 const feeder = () => {
   return model
     .connect()
     .then(http.getData)
-    // .then(model.save)
     .then(rateModel.saveData);
 };
 
