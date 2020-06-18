@@ -77,6 +77,11 @@ const argvCheckDebug = () => {
 const isDebug = () => debugFlag;
 
 const cfg = require("../config");
+
+// for testing set config.params.allowedDelay
+const setCfgDelay = () => {
+  cfg.params.allowedDelay = 600000;
+}
 //aggregate flow
 // return Promise<>
 const getPeriods = () => {
@@ -109,4 +114,5 @@ module.exports = {
   argvCheckDebug,
   getPeriods,
   isDebug,
+  setCfgDelay
 };

@@ -7,10 +7,22 @@ const model = require("../model");
 const rateModel = require("../model/rate");
 const agrTestData = require("./agrTestData");
 
+const hlp = require("../app/helper");
+
 describe("Check aggregate cases: ", () => {
   let mongoServer;
   let clock;
   let dbModel;
+
+  // current Date for time and created
+  const convertData = (testData) => {
+    const currentDate = new Date().toISOString();
+    return testData.map((test) => ({
+      ...test,
+      time: currentDate,
+      created: currentDate,
+    }));
+  };
 
   before((done) => {
     global.debug = () => {};
@@ -70,20 +82,24 @@ describe("Check aggregate cases: ", () => {
     // 2. Start app.aggregate
     // 3. Check mongoDb destination collection - rates15m
 
-    // rates
+    // 2019-9-28 0:46
+    clock = sinon.useFakeTimers({
+      now: new Date(2019, 9, 30, 0, 46),
+      shouldAdvanceTime: true,
+      advanceTimeDelta: 20,
+    });
+
+    // rates collection
     dbModel = rateModel.getModel("source", "15m");
     // rates15m
     const dbCheckModel = rateModel.getModel("destination", "15m");
 
-    // const blankData = agrTestData.blankData.map((bdata) => ({
-    //   ...bdata,
-    //   time: new Date().getTime(),
-    //   created: new Date().getTime(),
-    // }));
-    // const blankData = agrTestData.blankData
+    hlp.setCfgDelay();
+
+    const testData = convertData(agrTestData.blankData);
 
     dbModel
-      .insertMany(agrTestData.blankData)
+      .insertMany(testData)
       .then(() => {
         app
           .aggregate()
@@ -103,9 +119,9 @@ describe("Check aggregate cases: ", () => {
             expect(false).to.be.true;
             done();
           });
-        })
-        .catch((err2) => {
-          console.log("err2 ::: ", err2);
+      })
+      .catch((err2) => {
+        console.log("err2 ::: ", err2);
         expect(false).to.be.true;
         done();
       });
