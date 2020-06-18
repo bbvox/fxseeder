@@ -110,8 +110,10 @@ describe("Check aggregate cases: ", () => {
                 // mongoose
                 const [pair] = JSON.parse(JSON.stringify(pairData)); // get first pair
                 const [pairExpected] = agrTestData.expectedResult; // get FIRST !!!
-                console.log(pair, pairExpected);
-                expect(pair).to.deep.equal({...pairExpected, time: new Date().toISOString()});
+                expect(pair).to.deep.equal({
+                  ...pairExpected,
+                  time: pair.time,
+                });
                 done();
               });
           })
