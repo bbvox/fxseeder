@@ -38,8 +38,6 @@ module.exports = (function () {
     options: {
       useUnifiedTopology: true,
       useNewUrlParser: true,
-      // reconnectTries: 10,
-      // reconnectInterval: 200,
       connectTimeoutMS: 1000,
     },
     rrateSchema: {
@@ -77,7 +75,7 @@ module.exports = (function () {
 
   //1s = 1000 mS
   //1m = 60000 mS
-  //15m = 900000 mS (1000 * 60 * 15)
+  //15m = 900000 mS (60000 * 15)
   // 1h = 3600000 mS (15m * 4)
   config.periods = {
     "15m": 900000,

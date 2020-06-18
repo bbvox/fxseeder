@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 
 const model = require("./index");
 const cfg = require("../config");
-const { periods } = require("../config");
 
 /************************************
  *    rate.METHODS - MAIN           *
