@@ -17,6 +17,7 @@ const cfg = require("../config");
 
 const exportModel = {};
 
+const baseSchema = new mongoose.Schema(cfg.mongo.baseSchema);
 const ratesSchema = new mongoose.Schema(cfg.mongo.rateSchema);
 
 /**
@@ -37,7 +38,7 @@ exportModel.aggregate = (period) => {
     .then((pairs) => exportModel.calcAgr(pairs, period))
     .then((aggregateData) => exportModel.saveAgrData(aggregateData, destModel))
     .catch((err) => {
-      console.log("ERROR :::", err)
+      console.log("ERROR :::", err);
       // resolve to go on with promise.all from upper layer
       if (err.code === 1) {
         global.debug && global.debug(err, "Aggregate root function");
@@ -141,19 +142,24 @@ exportModel.getModel = (modelType, period) => {
       cfg.collections.destination[period]
     );
   } else {
-    return dbclient.model("rates", ratesSchema);
+    return dbclient.model("base", baseSchema);
   }
 };
 
-// save RATES data - feeder
+// save BASE RATES data - feeder
 exportModel.saveData = (ratesData) => {
   const dbModel = exportModel.getModel();
-  const rates = ratesData.map((rate) => ({
-    pid: cfg.pairs[rate.pair],
-    ...rate,
-  }));
 
-  return dbModel.insertMany(rates);
+  const baseRates = ratesData.map((rate) => {
+    const value = (parseFloat(rate.bid) + parseFloat(rate.offer)) / 2;
+    return {
+      pid: cfg.pairs[rate.pair],
+      value: parseFloat(value).toFixed(5),
+      ...rate,
+    };
+  });
+
+  return dbModel.insertMany(baseRates);
 };
 
 /** OLD ................... */

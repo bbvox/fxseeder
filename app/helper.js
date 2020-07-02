@@ -39,19 +39,29 @@ StringLayer.splitter = function (fxData) {
 
 //strange mapper
 StringLayer.parser = function (splitArray) {
-  var out = [],
-    map = ["pair", "low", "low", "high", "high", "open", "close", "time"];
+  var result = [],
+    map = ["pair", "bid", "bid", "offer", "offer", "high", "low", "time"];
   for (var i = 0; i <= splitArray.length - 1; i++) {
     for (var i2 = 0; i2 <= splitArray[i].length - 1; i2++) {
-      out[i2] || (out[i2] = {});
+      result[i2] || (result[i2] = {});
       // append pair data
-      out[i2][map[i]] = out[i2][map[i]]
-        ? out[i2][map[i]] + splitArray[i][i2]
+      result[i2][map[i]] = result[i2][map[i]]
+        ? result[i2][map[i]] + splitArray[i][i2]
         : splitArray[i][i2];
     }
   }
 
-  return out;
+  return result;
+};
+
+StringLayer.hashtag = function (hashArray) {
+  return hashArray.map((hash) => ({
+    ...hash,
+    bid: hash.bid.replace("#", ""),
+    offer: hash.offer.replace("#", ""),
+    high: hash.high.replace("#", ""),
+    low: hash.low.replace("#", ""),
+  }));
 };
 
 // additional helpers
@@ -81,7 +91,7 @@ const cfg = require("../config");
 // for testing set config.params.allowedDelay
 const setCfgDelay = () => {
   cfg.params.allowedDelay = 600000;
-}
+};
 //aggregate flow
 // return Promise<>
 const getPeriods = () => {
@@ -103,7 +113,7 @@ const getPeriods = () => {
   });
 
   global.debug && global.debug(agrPeriods, "HELPER LEVEL - PERIODS");
-  
+
   return agrPeriods.length
     ? Promise.resolve(agrPeriods)
     : Promise.reject({ err: "!helper.getPeriods - Not Found." });
@@ -114,5 +124,5 @@ module.exports = {
   argvCheckDebug,
   getPeriods,
   isDebug,
-  setCfgDelay
+  setCfgDelay,
 };
