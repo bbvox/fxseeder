@@ -84,7 +84,12 @@ const rawSchema = new Schema({
 
 2. CLI redirection Get output from one command and pass it to another.
 
-3. require('folder') - require order is : index.js then index.json if both of them are present
+3. Stop trace changes for file
+``
+git update-index --assume-unchanged FILE_NAME 
+``
+
+4. require('folder') - require order is : index.js then index.json if both of them are present
 
 ONLY COMMAND LINE...
 ```
