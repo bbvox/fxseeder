@@ -76,8 +76,9 @@ describe("Check aggregate cases: ", () => {
   );
 
   // whole flow
-  // aggregate data from 1m period(collection) and store into 15m period
-  it("Check OK when periods is divide by 15min - calcAgr.", (done) => {
+  // aggregate data from bases collection and store into 15m period
+  // only value from array is in use !!!
+  it("Check OK when periods is divide by 15min - calcBase \n source: bases / destination: rates15m.", (done) => {
     // 1. Insert blank data into mongoDB source collection - rates
     // 2. Start app.aggregate
     // 3. Check mongoDb destination collection - rates15m
@@ -96,7 +97,7 @@ describe("Check aggregate cases: ", () => {
 
     hlp.setCfgDelay();
 
-    const testData = convertData(agrTestData.blankData);
+    const testData = convertData(agrTestData.blankDataBase);
 
     dbModel
       .insertMany(testData)
@@ -128,6 +129,11 @@ describe("Check aggregate cases: ", () => {
         expect(false).to.be.true;
         done();
       });
+  });
+
+  it("Check OK when periods is divide by 1h - calcAgr \n source: rates15m / destination: rates1h.", (done) => {
+    // same testing approach as above but need to validate calcAgr - 
+    done();
   });
 
   afterEach(() => {

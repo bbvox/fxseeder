@@ -40,10 +40,14 @@ module.exports = (function () {
       useNewUrlParser: true,
       connectTimeoutMS: 1000,
     },
-    rrateSchema: {
+    baseSchema: {
       pid: req.pid,
+      pair: req.str,
       value: req.num,
-      ohlc: req.str,
+      bid: req.num, 
+      offer: req.num, 
+      high: req.num, 
+      low: req.num, 
       time: req.date,
       created: req.dateNow,
     },
