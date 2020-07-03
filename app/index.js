@@ -11,10 +11,7 @@ const rateModel = require("../model/rate");
  * 3. store into rates collection
  */
 const feeder = () => {
-  return model
-    .connect()
-    .then(http.getData)
-    .then(rateModel.saveData);
+  return model.connect().then(http.getData).then(rateModel.saveData);
 };
 
 /**
@@ -26,10 +23,11 @@ const aggregate = () => {
   return model
     .connect()
     .then(hlp.getPeriods)
-    .then(periods => Promise.all(periods.map(rateModel.aggregate)));
+    .then((periods) => Promise.all(periods.map(rateModel.aggregate)));
+  // .then(periods => rateModel.aggregate('15m'));
 };
 
 module.exports = {
   feeder,
-  aggregate
+  aggregate,
 };

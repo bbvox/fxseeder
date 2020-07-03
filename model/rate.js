@@ -35,7 +35,11 @@ exportModel.aggregate = (period) => {
   return exportModel
     .getData(srcModel, period)
     .then(exportModel.validateData)
-    .then((pairs) => exportModel.calcAgr(pairs, period))
+    .then((pairs) =>
+      period === "15m"
+        ? exportModel.calcBase(pairs, period)
+        : exportModel.calcAgr(pairs, period)
+    )
     .then((aggregateData) => exportModel.saveAgrData(aggregateData, destModel))
     .catch((err) => {
       console.log("ERROR :::", err);
@@ -50,13 +54,14 @@ exportModel.aggregate = (period) => {
 };
 
 // get source DATA ....
+// return array of promises
 exportModel.getData = (model, period) => {
   const { pairs } = cfg;
   const promises = [];
   for (let pkey in pairs) {
     promises.push(exportModel.getPairBy({ pid: pairs[pkey], period }, model));
   }
-
+  // return Promise.all([exportModel.getPairBy({ pid: 0, period }, model)]);
   return Promise.all(promises);
 };
 
@@ -88,6 +93,41 @@ exportModel.validateData = (sourceData) => {
   return isValid
     ? Promise.resolve(JSON.parse(JSON.stringify(sourceData)))
     : Promise.reject({ err: "Empty response from query", code: 1 });
+};
+
+/**
+ * calcBase
+ *  - use for generate initial OHLC 15m
+ * @param {Array} of pairs array
+ * [[pair0], [pair1], [pair2]]
+ * @param {string} period
+ *
+ * @returns {Promise} pairsArray
+ */
+exportModel.calcBase = (pairs, period) => {
+  let pairsAgr = [];
+
+  pairs.forEach((pair, idx) => {
+    const [firstPair] = pair;
+
+    pairsAgr[idx] = {
+      pid: firstPair.pid,
+      pair: firstPair.pair,
+      open: firstPair.value,
+      high: firstPair.value,
+      low: firstPair.value,
+      close: firstPair.value,
+      time: exportModel.getTimeAgr(period),
+    };
+
+    pair.forEach((one) => {
+      pairsAgr[idx].high < one.value && (pairsAgr[idx].high = one.value);
+      pairsAgr[idx].low > one.value && (pairsAgr[idx].low = one.value);
+
+      pairsAgr[idx].close = one.value;
+    });
+  });
+  return Promise.resolve(pairsAgr);
 };
 
 /**
@@ -130,11 +170,15 @@ exportModel.saveAgrData = (agrData, model) => model.insertMany(agrData);
 exportModel.getModel = (modelType, period) => {
   const dbclient = model.getClient();
   if (modelType === "source") {
-    return dbclient.model(
-      cfg.collections.source[period],
-      ratesSchema,
-      cfg.collections.source[period]
-    );
+    if (period === "15m") {
+      return dbclient.model("base", baseSchema);
+    } else {
+      return dbclient.model(
+        cfg.collections.source[period],
+        ratesSchema,
+        cfg.collections.source[period]
+      );
+    }
   } else if (modelType === "destination") {
     return dbclient.model(
       cfg.collections.destination[period],
